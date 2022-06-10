@@ -1,0 +1,5 @@
+DB_USERNAME = "ashwin"
+DB_PASSWORD = "password123"
+DB_URL = "localhost"
+DB_PORT = "5432"
+DB_NAME = "job_board"
