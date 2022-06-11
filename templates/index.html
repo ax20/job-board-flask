@@ -7,8 +7,8 @@
 {% endblock %}
 {% block content %}
 <article class="mx-auto mb-16 flex w-full max-w-4xl flex-col items-start justify-center">
-    <h1 class="mb-4 text-3xl font-bold tracking-tight text-white md:text-4xl">{{ config.site.title }}</h1>
-    <div class="prose w-full max-w-none text-white">
+    <h1 class="mb-4 text-3xl font-bold tracking-tight text-gray-800 dark:text-white md:text-4xl">{{ config.site.title }}</h1>
+    <div class="prose w-full max-w-none text-gray-800 dark:text-white">
         {{ config.site.description }}
     </div>
 </article>
@@ -17,10 +17,10 @@
     {% for job in jobs %}
     <div class="mx-auto w-full flex-col">
         <a href="/job/{{ job.id }}/" class="w-full">
-        <div class="hover:outline hover:outline-blue-600  m-2 rounded-xl p-3 bg-gray-900 dark:bg-white">
-            <h1 class="m-2 text-2xl font-bold tracking-tight text-black md:text-3xl lg:text-4xlrounded-lg px-2.5 py-1.5"> {{ job.title }}</h1>
-            <p class="ml-2 text-sm font-semibold tracking-tight text-black md:text-base lg:text-lg px-2.5">{{ job.posted_on }} / {{ job.position }} @ {{ job.company}} / {{ job.location }}</p>
-            <p class="m-2 text-sm tracking-tight text-black md:text-base lg:text-lg px-2.5 py-1.5"> {{ job.summary }}</p>
+        <div class="hover:outline hover:outline-02c39 hover:outline-5 m-2 rounded-xl p-3 bg-zinc-300 dark:bg-white">
+            <h1 class="m-2 text-2xl font-bold tracking-tight text-gray-800 dark:text-black md:text-3xl lg:text-4xlrounded-lg px-2.5 py-1.5"> {{ job.title }}</h1>
+            <p class="ml-2 text-sm font-semibold tracking-tight text-gray-800 dark:text-black md:text-base lg:text-lg px-2.5">{{ job.posted_on }} / {{ job.position }} @ {{ job.company}} / {{ job.location }}</p>
+            <p class="m-2 text-sm tracking-tight text-gray-800 dark:text-black md:text-base lg:text-lg px-2.5 py-1.5"> {{ job.summary }}</p>
         </div>
     </a>
     </div>

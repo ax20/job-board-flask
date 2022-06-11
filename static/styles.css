@@ -1,0 +1,20 @@
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
+a {
+    transition: color 0.4s;
+}
+
+a:hover {
+    color: #028090;
+}
