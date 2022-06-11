@@ -17,8 +17,9 @@ class Job(db.Model):
     company = Column(String(100), nullable=False)
     location = Column(String(100), nullable=False)
     url = Column(String(100), nullable=False)
+    position = Column(String(100), nullable=False)
 
-    def __init(self, posted_on, expires_on, title, summary, description, company, location, url):
+    def __init(self, posted_on, expires_on, title, summary, description, company, location, url, position):
         self.posted_on = posted_on
         self.expires_on = expires_on
         self.title = title
@@ -27,6 +28,7 @@ class Job(db.Model):
         self.company = company
         self.location = location
         self.url = url
+        self.position = position
 
 def create_all():
     try:

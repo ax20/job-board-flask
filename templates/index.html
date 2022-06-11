@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+{{ config.title.prefix }} Homepage {{ config.title.seperator }} {{ config.title.suffix }}
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<article class="mx-auto mb-16 flex w-full max-w-4xl flex-col items-start justify-center">
+    <h1 class="mb-4 text-3xl font-bold tracking-tight text-white md:text-4xl">{{ config.site.title }}</h1>
+    <div class="prose w-full max-w-none text-white">
+        {{ config.site.description }}
+    </div>
+</article>
+<div class="grid grid-cols-1 md:grid-cols-2 ld:grid-cols-2">
+    {% for job in jobs %}
+    <div className="mx-auto w-full max-w-4xl flex-col grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div className="hover:outline hover:outline-blue-600 m-4 rounded-lg p-3">
+            <a href="/job/{{ job.id }}/" class="w-full">
+                <div>
+                    <h1
+                        className="m-2 text-2xl font-semibold tracking-tight text-black dark:text-white md:text-3xl rounded-lg px-2.5 py-1.5 bg-gray-900">
+                        {{ job.title }}</h1>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}
+{{ config.title.prefix }} {{ job.title }} {{ config.title.seperator }} {{ config.title.suffix }}
+{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<div class="mx-auto mb-16 flex w-full max-w-4xl flex-col items-start justify-center">
+  <h1 class="mb-8 text-3xl fonprojectst-bold tracking-tight text-black dark:text-white md:text-5xl">
+    {{ job.title }}
+  </h1>
+  <div class="">
+    <p class="text-gray-700 text-base">{{ job.posted_on }}</p>
+    <p class="text-gray-700 text-base">{{ job.expires_on }}</p>
+  </div>
+  <div class="">
+    <p class="text-gray-700 text-base">{{ job.company }}</p>
+    <p class="text-gray-700 text-base">{{ job.location }}</p>
+  </div>
+  <div class="relative mb-4 w-full">
+    <p>{{ job.summary }}</p>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{
+    "title": {
+        "prefix":"",
+        "suffix":"Job Board",
+        "seperator":" - ",
+        "home_url":"http://www.jobboard.com",
+        "author": "Ashwin Charathsandran"
+    },
+    "site": {
+        "title":"Job Board",
+        "description": "Hire the best talent for your company"
+    }
+}
