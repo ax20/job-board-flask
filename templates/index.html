@@ -17,10 +17,10 @@
     {% for job in jobs %}
     <div class="mx-auto w-full flex-col">
         <a href="/job/{{ job.id }}/" class="w-full">
-        <div class="hover:outline hover:outline-blue-600 m-4 rounded-xl p-3 bg-gray-900 dark:bg-white">
-            <h1 class="m-2 text-2xl font-semibold tracking-tight text-black md:text-3xl lg:text-4xlrounded-lg px-2.5 py-1.5"> {{ job.title }}</h1>
-            <p class="m-2 text-sm font-semibold tracking-tight text-black md:text-base lg:text-lg px-2.5 py-1.5">{{ job.posted_on }} - {{ job.company}} - {{ job.position }}</p>
-            <p class="m-2 text-sm font-semibold tracking-tight text-black md:text-base lg:text-lg px-2.5 py-1.5"> {{ job.summary }}</p>
+        <div class="hover:outline hover:outline-blue-600  m-2 rounded-xl p-3 bg-gray-900 dark:bg-white">
+            <h1 class="m-2 text-2xl font-bold tracking-tight text-black md:text-3xl lg:text-4xlrounded-lg px-2.5 py-1.5"> {{ job.title }}</h1>
+            <p class="ml-2 text-sm font-semibold tracking-tight text-black md:text-base lg:text-lg px-2.5">{{ job.posted_on }} / {{ job.position }} @ {{ job.company}} / {{ job.location }}</p>
+            <p class="m-2 text-sm tracking-tight text-black md:text-base lg:text-lg px-2.5 py-1.5"> {{ job.summary }}</p>
         </div>
     </a>
     </div>

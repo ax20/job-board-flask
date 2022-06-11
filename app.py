@@ -8,6 +8,9 @@ from config import ACCESS_TOKEN
 with open('site.json', 'r') as f:
     site_data = json.load(f)
 
+def has_posting_expired(job):
+    return job.expires_on < datetime.datetime.now()
+
 # add jobe model to db
 def new_job(model):
     try:
@@ -117,8 +120,11 @@ def delete(id):
 def index():
     jobs = Job.query.all()
     for job in jobs:
-     job.posted_on = job.posted_on.strftime('%Y/%m/%d')
-     job.expires_on = job.expires_on.strftime('%Y/%m/%d')
+     if has_posting_expired(job):
+         jobs.remove(job)
+
+     job.posted_on = job.posted_on.strftime('%Y-%m-%d')
+
     return render_template('index.html', jobs=jobs, config=site_data)
 
 @app.route('/job/<int:id>/', methods=['GET'])
@@ -126,6 +132,9 @@ def job(id):
     job = Job.query.filter_by(id=id).first()
     if job is None:
         abort(404)
+    if has_posting_expired(job):
+        return abort(410)
+    job.posted_on = job.posted_on.strftime('%B, %d, %Y')
     return render_template('job.html', job=job, config=site_data)
 
 @app.route('/jobmaster/<string:token>/', methods=['GET'])
