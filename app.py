@@ -1,7 +1,7 @@
 from modules import app, sqlalchemy, SQLAlchemy
 from models import Job, db
 import traceback # ! DEBUG
-from flask import render_template, request, abort
+from flask import render_template, request, abort, redirect
 import datetime, json
 from config import ACCESS_TOKEN
 
@@ -54,7 +54,7 @@ def delete_job(id):
 def new():
     if request.method =="POST":
         new_posting = Job(
-            posted_on = datetime.datetime.now(),
+            posted_on = datetime.datetime.now().strftime("%d/%m/%y"),
             expires_on = datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d'),
             title = request.form['title'],
             summary = request.form['summary'],
@@ -72,30 +72,9 @@ def new():
                 f.write(traceback.format_exc())
             abort(500)
 
-        return "Success"
+        return redirect('/')
     else:
-        return '''
-        <form method="POST">
-            Location: <input name="location" type="text">
-            <br>
-            Title: <input name="title" type="text">
-            <br>
-            Summary: <input name="summary" type="text">
-            <br>
-            Description: <input name="description" type="text">
-            <br>
-            Company: <input name="company" type="text">
-            <br>
-            Position: <input name="position" type="text">
-            <br>
-            URL: <input name="url" type="text">
-            <br>
-            Expires on: <input name="expires_on" type="text">
-            <br>
-            <input type="submit">
-        </form>
-
-        '''
+        return "Error"
 
 @app.route('/edit/<int:id>/', methods=['POST'])
 def edit(id):
@@ -119,13 +98,11 @@ def delete(id):
 @app.route('/', methods=['GET'])
 def index():
     jobs = Job.query.all()
-    for job in jobs:
-     if has_posting_expired(job):
-         jobs.remove(job)
+    filtered_jobs = [job for job in jobs if not has_posting_expired(job)]
+    for job in filtered_jobs:
+        job.posted_on = job.posted_on.strftime("%d/%m/%y")
 
-     job.posted_on = job.posted_on.strftime('%Y-%m-%d')
-
-    return render_template('index.html', jobs=jobs, config=site_data)
+    return render_template('index.html', jobs=filtered_jobs, config=site_data)
 
 @app.route('/job/<int:id>/', methods=['GET'])
 def job(id):

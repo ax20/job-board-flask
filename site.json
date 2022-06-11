@@ -1,14 +1,14 @@
 {
     "title": {
         "prefix":"",
-        "suffix":"Job Board",
+        "suffix":"Practicum Opprotunities",
         "seperator":" - ",
         "home_url":"http://www.jobboard.com"
     },
     "site": {
-        "title":"Job Board",
-        "description": "Hire the best talent for your company",
+        "title":"Practicum Opprotunities",
+        "description": "Internships for you by Low Entropy",
         "no_jobs_message": "No jobs found",
-        "author": "Ashwin Charathsandran"
+        "author": "Low Entropy"
     }
 }
