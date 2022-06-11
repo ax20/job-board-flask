@@ -3,6 +3,7 @@ from models import Job, db
 import traceback # ! DEBUG
 from flask import render_template, request, abort
 import datetime, json
+from config import ACCESS_TOKEN
 
 with open('site.json', 'r') as f:
     site_data = json.load(f)
@@ -44,18 +45,14 @@ def delete_job(id):
         print(f"Error deleting job: {e}")
         with open('db_creation.log', 'w') as f:
             f.write(traceback.format_exc())
+        return abort(404)
 
-@app.route('/', methods=['GET'])
-def index():
-    jobs = Job.query.all()
-    return render_template('index.html', jobs=jobs, config=site_data)
-
-@app.route('/new/', methods=['POST', 'GET'])
+@app.route('/new/', methods=['POST'])
 def new():
     if request.method =="POST":
         new_posting = Job(
             posted_on = datetime.datetime.now(),
-            expires_on = datetime.datetime.strptime(request.form['expires_on'], '%Y/%m/%d'),
+            expires_on = datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d'),
             title = request.form['title'],
             summary = request.form['summary'],
             description = request.form['description'],
@@ -99,8 +96,8 @@ def new():
 
 @app.route('/edit/<int:id>/', methods=['POST'])
 def edit(id):
-    posted_on = datetime.datetime.strptime(request.form['posted_on'], '%Y/%m/%d')
-    expires_on = datetime.datetime.strptime(request.form['expires_on'], '%Y/%m/%d')
+    posted_on = datetime.datetime.strptime(request.form['posted_on'], '%Y-%m-%d')
+    expires_on = datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d')
     title = request.form['title']
     summary = request.form['summary']
     description = request.form['description']
@@ -114,8 +111,15 @@ def edit(id):
 
 @app.route('/delete/<int:id>/', methods=['POST'])
 def delete(id):
-    delete_job(id)
-    return ""
+    return delete_job(id)
+
+@app.route('/', methods=['GET'])
+def index():
+    jobs = Job.query.all()
+    for job in jobs:
+     job.posted_on = job.posted_on.strftime('%Y/%m/%d')
+     job.expires_on = job.expires_on.strftime('%Y/%m/%d')
+    return render_template('index.html', jobs=jobs, config=site_data)
 
 @app.route('/job/<int:id>/', methods=['GET'])
 def job(id):
@@ -124,6 +128,12 @@ def job(id):
         abort(404)
     return render_template('job.html', job=job, config=site_data)
 
-@app.route('/jobmaster', methods=['GET'])
-def login():
-    return render_template('jobmaster.html')
+@app.route('/jobmaster/<string:token>/', methods=['GET'])
+def login(token):
+    if token:
+        if str(token) == ACCESS_TOKEN:
+            return render_template('jobmaster.html', config=site_data)
+        else:
+            abort(401)
+    else:
+        abort(404)

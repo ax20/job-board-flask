@@ -11,18 +11,17 @@
     {% endblock %}
 </head>
 
-<body>
-    <main class="flex min-h-screen flex-col bg-white dark:bg-gray-900">
-        <div class="flex flex-1 flex-col justify-center bg-white px-4 dark:bg-gray-900 sm:px-8">
+<body class="bg-white dark:bg-gray-900">
+    <main class="flex min-h-screen flex-col bg-white">
+        <div class="flex flex-1 flex-col justify-center px-4 bg-white dark:bg-gray-900 sm:px-8">
             {% block content %}
             {% endblock %}
         </div>
     </main>
-    <footer class="mb-8 flex flex-col items-center print:hidden text-gray-100">
+    <footer class="flex flex-col items-center print:hidden text-gray-100 bg-white dark:bg-gray-900">
         <div class="text-center">
-            {/* Copyright footer that states all rights belong to Ashwin Charathsadnran */}
             <p class="text-gray-700 text-sm">
-                &copy; 2022 Ashwin Charathsandran. All rights reserved.
+                &copy; 2022 {{ config.site.author }}. All rights reserved.
                 <br />
                 Built with
                 <a href="https://flask.palletsprojects.com/" class="hover:underline">Flask</a>

@@ -3,11 +3,12 @@
         "prefix":"",
         "suffix":"Job Board",
         "seperator":" - ",
-        "home_url":"http://www.jobboard.com",
-        "author": "Ashwin Charathsandran"
+        "home_url":"http://www.jobboard.com"
     },
     "site": {
         "title":"Job Board",
-        "description": "Hire the best talent for your company"
+        "description": "Hire the best talent for your company",
+        "no_jobs_message": "No jobs found",
+        "author": "Ashwin Charathsandran"
     }
 }

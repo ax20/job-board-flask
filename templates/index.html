@@ -12,19 +12,25 @@
         {{ config.site.description }}
     </div>
 </article>
-<div class="grid grid-cols-1 md:grid-cols-2 ld:grid-cols-2">
+{% if jobs is defined and jobs|length > 0 %}
+<div class="mx-auto w-full max-w-4xl flex-col grid grid-cols-1 lg:grid-cols-2 gap-2">
     {% for job in jobs %}
-    <div className="mx-auto w-full max-w-4xl flex-col grid grid-cols-1 lg:grid-cols-2 gap-2">
-        <div className="hover:outline hover:outline-blue-600 m-4 rounded-lg p-3">
-            <a href="/job/{{ job.id }}/" class="w-full">
-                <div>
-                    <h1
-                        className="m-2 text-2xl font-semibold tracking-tight text-black dark:text-white md:text-3xl rounded-lg px-2.5 py-1.5 bg-gray-900">
-                        {{ job.title }}</h1>
-                </div>
-            </a>
+    <div class="mx-auto w-full flex-col">
+        <a href="/job/{{ job.id }}/" class="w-full">
+        <div class="hover:outline hover:outline-blue-600 m-4 rounded-xl p-3 bg-gray-900 dark:bg-white">
+            <h1 class="m-2 text-2xl font-semibold tracking-tight text-black md:text-3xl lg:text-4xlrounded-lg px-2.5 py-1.5"> {{ job.title }}</h1>
+            <p class="m-2 text-sm font-semibold tracking-tight text-black md:text-base lg:text-lg px-2.5 py-1.5">{{ job.posted_on }} - {{ job.company}} - {{ job.position }}</p>
+            <p class="m-2 text-sm font-semibold tracking-tight text-black md:text-base lg:text-lg px-2.5 py-1.5"> {{ job.summary }}</p>
         </div>
+    </a>
     </div>
     {% endfor %}
 </div>
+{% else %}
+<div class="mx-auto mb-16 flex w-full max-w-4xl flex-col items-start justify-center">
+    <div class="prose w-full max-w-none text-white">
+        <h3 class="mb-4 text-xl font-bold tracking-tight text-white md:text-2xl">{{ config.site.no_jobs_message }}</h3>
+    </div>
+</article>
+{% endif %}
 {% endblock %}
