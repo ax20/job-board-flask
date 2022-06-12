@@ -10,5 +10,3 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_string
 
 SQLAlchemy = SQLAlchemy
 sqlalchemy = sqlalchemy
-
-# Database access

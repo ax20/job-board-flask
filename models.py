@@ -30,6 +30,18 @@ class Job(db.Model):
         self.url = url
         self.position = position
 
+class User(db.Model):
+    __tablename__ = 'users'
+    __tableargs__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(100), nullable=False, unique=True)
+    password = Column(String(100), nullable=False)
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
 def create_all():
     try:
         db.create_all()

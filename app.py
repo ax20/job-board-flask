@@ -1,7 +1,7 @@
 from modules import app, sqlalchemy, SQLAlchemy
-from models import Job, db
+from models import Job, db, User
 import traceback # ! DEBUG
-from flask import render_template, request, abort, redirect
+from flask import jsonify, render_template, request, abort, redirect
 import datetime, json
 from config import ACCESS_TOKEN
 
@@ -76,8 +76,8 @@ def new():
     else:
         return "Error"
 
-@app.route('/edit/<int:id>/', methods=['POST'])
-def edit(id):
+@app.route('/edit/', methods=['POST'])
+def edit():
     posted_on = datetime.datetime.strptime(request.form['posted_on'], '%Y-%m-%d')
     expires_on = datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d')
     title = request.form['title']
@@ -88,12 +88,38 @@ def edit(id):
     url = request.form['url']
     position = request.form['position']
     new_posting = Job(posted_on, expires_on, title, summary, description, company, location, url)
-    modify_job(id, new_posting)
+    modify_job(request.form['id'], new_posting)
     return ""
 
-@app.route('/delete/<int:id>/', methods=['POST'])
-def delete(id):
-    return delete_job(id)
+@app.route('/delete/', methods=['POST'])
+def delete():
+    return delete_job(request.form['id'])
+
+@app.route('/search/<string:args>', methods=['GET'])
+def search(args):
+    if request.method == "GET":
+        search_results = Job.query.filter(Job.title.like(f"%{args}%")).all()
+        if len(search_results) > 0:
+            results = []
+            for result in search_results:
+                r = {
+                    "id": result.id,
+                    "posted_on": result.posted_on,
+                    "expires_on": result.expires_on,
+                    "title": result.title,
+                    "summary": result.summary,
+                    "description": result.description,
+                    "company": result.company,
+                    "location": result.location,
+                    "url": result.url,
+                    "position": result.position
+                }
+            results.append(r)
+            return jsonify(results)
+        else:
+            return jsonify([])
+    else:
+        abort(405)
 
 @app.route('/', methods=['GET'])
 def index():
@@ -114,12 +140,12 @@ def job(id):
     job.posted_on = job.posted_on.strftime('%B, %d, %Y')
     return render_template('job.html', job=job, config=site_data)
 
-@app.route('/jobmaster/<string:token>/', methods=['GET'])
-def login(token):
-    if token:
-        if str(token) == ACCESS_TOKEN:
-            return render_template('jobmaster.html', config=site_data)
-        else:
-            abort(401)
-    else:
-        abort(404)
+@app.route('/dashboard/<string:password>', methods=['GET'])
+def dashboard(password):
+    
+    if password:
+        if password == ACCESS_TOKEN:
+            return render_template('dashboard.html', config=site_data)
+        return abort(401)
+    return abort(404)
+        
