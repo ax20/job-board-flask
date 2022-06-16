@@ -5,13 +5,18 @@ from flask import jsonify, render_template, request, abort, redirect
 import datetime, json
 from config import ACCESS_TOKEN
 
+# Load Site Configurations
 with open('site.json', 'r') as f:
     site_data = json.load(f)
 
 def has_posting_expired(job):
     return job.expires_on < datetime.datetime.now()
 
-# add jobe model to db
+def purge_jobs():
+    for (job) in Job.query.all():
+        if has_posting_expired(job):
+            delete_job(job.id)
+
 def new_job(model):
     try:
         db.session.add(model)
@@ -140,12 +145,18 @@ def job(id):
     job.posted_on = job.posted_on.strftime('%B, %d, %Y')
     return render_template('job.html', job=job, config=site_data)
 
-@app.route('/dashboard/<string:password>', methods=['GET'])
+@app.route('/purge/<string:password>/', methods=['GET'])
+def purge(password):
+    if password == ACCESS_TOKEN:
+        purge_jobs()
+        return redirect('/dashboard/' + password)
+    else:
+        return "Error"
+
+@app.route('/dashboard/<string:password>/', methods=['GET'])
 def dashboard(password):
-    
     if password:
         if password == ACCESS_TOKEN:
             return render_template('dashboard.html', config=site_data)
         return abort(401)
     return abort(404)
-        
