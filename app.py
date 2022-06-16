@@ -143,6 +143,7 @@ def job(id):
     if has_posting_expired(job):
         return abort(410)
     job.posted_on = job.posted_on.strftime('%B, %d, %Y')
+    job.expires_on = job.expires_on.strftime('%B, %d, %Y')
     return render_template('job.html', job=job, config=site_data)
 
 @app.route('/purge/<string:password>/', methods=['GET'])
@@ -151,7 +152,7 @@ def purge(password):
         purge_jobs()
         return redirect('/dashboard/' + password)
     else:
-        return "Error"
+        return abort(500)
 
 @app.route('/dashboard/<string:password>/', methods=['GET'])
 def dashboard(password):
