@@ -2,6 +2,7 @@ from modules import app, SQLAlchemy
 from sqlalchemy import Integer, String, Column, DateTime
 import traceback # ! DEBUG
 
+
 db = SQLAlchemy(app)
 
 class Job(db.Model):

@@ -3,7 +3,9 @@ from models import Job, db, User
 import traceback # ! DEBUG
 from flask import jsonify, render_template, request, abort, redirect
 import datetime, json
-from config import ACCESS_TOKEN
+import os
+
+ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 
 # Load Site Configurations
 with open('site.json', 'r') as f:
