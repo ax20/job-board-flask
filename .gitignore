@@ -1,2 +1,4 @@
 # Ignore development enviornment
 dev/
+__pycache__/
+creds.py

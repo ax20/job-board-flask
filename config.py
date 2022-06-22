@@ -1,6 +1,0 @@
-DB_USERNAME = "ashwin"
-DB_PASSWORD = "password123"
-DB_URL = "https://ashwin.lol:5423"
-DB_PORT = "5432"
-DB_NAME = "job_board"
-ACCESS_TOKEN = "Ashwin123"

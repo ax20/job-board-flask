@@ -4,9 +4,7 @@ import traceback # ! DEBUG
 from flask import jsonify, render_template, request, abort, redirect
 import datetime, json
 import os
-
-ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
-
+from creds import ACCESS_TOKEN
 # Load Site Configurations
 with open('site.json', 'r') as f:
     site_data = json.load(f)
@@ -163,3 +161,6 @@ def dashboard(password):
             return render_template('dashboard.html', config=site_data)
         return abort(401)
     return abort(404)
+
+if __name__ == '__main__':
+    app.run()
