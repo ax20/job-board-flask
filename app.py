@@ -1,4 +1,4 @@
-from modules import app,SQLAlchemy
+from modules import app, SQLAlchemy
 from models import Job, db, User
 import traceback # ! DEBUG
 from flask import jsonify, render_template, request, abort, redirect
