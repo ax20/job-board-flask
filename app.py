@@ -163,6 +163,3 @@ def dashboard(password):
             return render_template('dashboard.html', config=site_data)
         return abort(401)
     return abort(404)
-
-if __name__ == '__main__':
-    app.run()
