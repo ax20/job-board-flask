@@ -1,10 +1,12 @@
-from modules import app, sqlalchemy, SQLAlchemy
+from modules import app,SQLAlchemy
 from models import Job, db, User
 import traceback # ! DEBUG
 from flask import jsonify, render_template, request, abort, redirect
 import datetime, json
 import os
-from creds import ACCESS_TOKEN
+
+ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
+
 # Load Site Configurations
 with open('site.json', 'r') as f:
     site_data = json.load(f)
