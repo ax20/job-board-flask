@@ -1,46 +1,8 @@
 Traceback (most recent call last):
-  File "/home/ashwin/Code/job-board-flask/models.py", line 48, in create_all
-    db.create_all()
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1094, in create_all
-    self._execute_for_all_tables(app, bind, 'create_all')
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1086, in _execute_for_all_tables
-    op(bind=self.get_engine(app, bind), **extra)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1017, in get_engine
-    return connector.get_engine()
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 594, in get_engine
-    self._engine = rv = self._sa.create_engine(sa_url, options)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1027, in create_engine
-    return sqlalchemy.create_engine(sa_url, **engine_opts)
-  File "<string>", line 2, in create_engine
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/util/deprecations.py", line 309, in warned
-    return fn(*args, **kwargs)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/engine/create.py", line 534, in create_engine
-    entrypoint = u._get_entrypoint()
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/engine/url.py", line 661, in _get_entrypoint
-    cls = registry.load(name)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 343, in load
-    raise exc.NoSuchModuleError(
-sqlalchemy.exc.NoSuchModuleError: Can't load plugin: sqlalchemy.dialects:sqllite
+  File "app.py", line 33, in modify_job
+    job.posted_on = new_model.fposted_on if new.posted_on != None else job.posted_on
+AttributeError: 'function' object has no attribute 'posted_on'
 Traceback (most recent call last):
-  File "/home/ashwin/Code/job-board-flask/models.py", line 48, in create_all
-    db.create_all()
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1094, in create_all
-    self._execute_for_all_tables(app, bind, 'create_all')
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1086, in _execute_for_all_tables
-    op(bind=self.get_engine(app, bind), **extra)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1017, in get_engine
-    return connector.get_engine()
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 594, in get_engine
-    self._engine = rv = self._sa.create_engine(sa_url, options)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/flask_sqlalchemy/__init__.py", line 1027, in create_engine
-    return sqlalchemy.create_engine(sa_url, **engine_opts)
-  File "<string>", line 2, in create_engine
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/util/deprecations.py", line 309, in warned
-    return fn(*args, **kwargs)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/engine/create.py", line 534, in create_engine
-    entrypoint = u._get_entrypoint()
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/engine/url.py", line 661, in _get_entrypoint
-    cls = registry.load(name)
-  File "/home/ashwin/Code/job-board-flask/dev/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 343, in load
-    raise exc.NoSuchModuleError(
-sqlalchemy.exc.NoSuchModuleError: Can't load plugin: sqlalchemy.dialects:sqllite
+  File "app.py", line 33, in modify_job
+    job.posted_on = new_model.fposted_on if new_model.fposted_on != None else job.posted_on
+AttributeError: 'Job' object has no attribute 'fposted_on'

@@ -22,7 +22,7 @@
     <i>{{ job.summary }}</i>
   </div>
   <div class="relative w-full text-black dark:text-white">
-    <p>{{ job.description }}</p>
+    <p>{{ job.description | safe }}</p>
   </div>
 
 </div>
