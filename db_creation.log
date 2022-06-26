@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "app.py", line 33, in modify_job
-    job.posted_on = new_model.fposted_on if new.posted_on != None else job.posted_on
-AttributeError: 'function' object has no attribute 'posted_on'
-Traceback (most recent call last):
-  File "app.py", line 33, in modify_job
-    job.posted_on = new_model.fposted_on if new_model.fposted_on != None else job.posted_on
-AttributeError: 'Job' object has no attribute 'fposted_on'

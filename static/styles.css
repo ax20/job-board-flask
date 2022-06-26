@@ -10,12 +10,3 @@ html {
 ::-webkit-scrollbar-thumb {
     background: #FF0000;
 }
-
-a {
-    text-decoration: underline;
-    transition: color 0.4s;
-}
-
-a:hover {
-    color: #028090;
-}
