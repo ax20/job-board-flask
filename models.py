@@ -43,6 +43,16 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+class EmailList(db.Model):
+    __tablename__ = 'email_list'
+    __tableargs__ = {'extend_existing': True}
+
+    id = Column(Integer, primary_key=True)
+    email = Column(String(100), nullable=False, unique=True)
+
+    def __init__(self, email):
+        self.email = email
+
 def create_all():
     try:
         db.create_all()

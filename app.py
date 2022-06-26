@@ -1,11 +1,12 @@
 from modules import app, SQLAlchemy
-from models import Job, db, User
+from models import Job, db, User, EmailList
 import traceback # ! DEBUG
 from flask import jsonify, render_template, request, abort, redirect
 import datetime, json
 import os
 
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
+GUEST_ACCESS_TOKEN = os.environ.get('GUEST_ACCESS_TOKEN')
 
 # Load Site Configurations
 with open('site.json', 'r') as f:
@@ -155,6 +156,17 @@ def purge(password):
         return redirect('/dashboard/' + password)
     else:
         return abort(500)
+
+@app.route('/email/', methods=['POST'])
+def email():
+    emails = EmailList.query.all()
+    if request.form['email']:
+        if request.form['email'] in emails:
+            return redirect('/' + ACCESS_TOKEN)
+        else:
+            return abort(401)
+    else:
+        abort(404)
 
 @app.route('/dashboard/<string:password>/', methods=['GET'])
 def dashboard(password):

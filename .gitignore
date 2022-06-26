@@ -2,3 +2,5 @@
 dev/
 __pycache__/
 creds.py
+jobs.db
+*.log
