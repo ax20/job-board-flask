@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block header %}
+    <meta charset="utf-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% endblock %}
+    {% block customHead %}{% endblock %}
+</head>
+
+<body class="bg-stone-100 dark:bg-gray-900">
+    <main class="flex min-h-screen flex-col">
+        <div class="flex flex-1 flex-col justify-center px-4 bg-f3f2ef dark:bg-gray-900 sm:px-8">
+            <div class="mx-auto justify-content-center mb-16 flex w-full max-w-4xl flex-col"><img
+                    src="https://lowentropy.org/wp-content/uploads/2021/01/Group-72.png" width=590>
+            </div>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="flex flex-col items-center print:hidden text-gray-100 bg-stone-100 dark:bg-gray-900 mb-4">
+        <div class="text-center">
+            <p class="text-gray-500 text-sm">
+                &copy; 2022 {{ config.site.author }}. All rights reserved.
+                <br />
+                Built with
+                <a href="https://flask.palletsprojects.com/" class="hover:underline">Flask</a>
+            </p>
+        </div>
+    </footer>
+    {% block js %}
+    {% endblock %}
+</body>
+
+</html>
