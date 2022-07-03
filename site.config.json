@@ -1,0 +1,11 @@
+{
+    "site": {
+        "unauthorized": "You do not have access this site.",
+        "no_jobs_message": "There are no jobs available at this time."
+    },
+    "title": {
+        "suffix": " - Jobs",
+        "prefix": "Jobs",
+        "separator": " | "
+    }
+}

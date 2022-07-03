@@ -1,9 +1,7 @@
 from modules import app, SQLAlchemy
 from sqlalchemy import Integer, String, Column, DateTime
-from flask_wtf import wtforms
 from flask_login import UserMixin
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import InputRequired, Length, ValidationError
+import traceback #!! DEBUG
 
 db = SQLAlchemy(app)
 
@@ -45,28 +43,6 @@ class User(db.Model, UserMixin):
         self.username = username
         self.password = password
         self.email = email
-
-class RegisterForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max=30)], render_kw={"placeholder": "Username"})
-    password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kaw={"placeholder": "Password"})
-    submit = SubmitField("Register")
-
-    def validate_username(self, username):
-        exisiting_username = User.query.filter_by(username=username.data).first()
-        if exisiting_username:
-            raise ValidationError("That username already exists. Please choose a different one ")
-
-class RegisterForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max=30)], render_kw={"placeholder": "Username"})
-    password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kaw={"placeholder": "Password"})
-    submit = SubmitField("Register")
-
-    def validate_username(self, username):
-        exisiting_username = User.query.filter_by(username=username.data).first()
-        if exisiting_username:
-            raise ValidationError("That username already exists. Please choose a different one ")
-
-
 class EmailList(db.Model):
     __tablename__ = 'email_list'
     __table_args__ = {'extend_existing': True}
@@ -76,3 +52,12 @@ class EmailList(db.Model):
 
     def __init__(self, email):
         self.email = email
+        
+def create_tables():
+    try:
+        db.create_all()
+        print("Created tables")
+    except Exception as e:
+        print(f"Error creating database: {e}")
+        with open('db_creation.log', 'a') as f:
+            f.write(traceback.format_exc())
