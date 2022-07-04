@@ -29,6 +29,22 @@ class Job(db.Model):
         self.location = location
         self.url = url
         self.position = position
+    
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'date_created': self.date_created,
+            'date_modified': self.date_modified,
+            'date_expiry': self.date_expiry,
+            'title': self.title,
+            'preview': self.preview,
+            'content': self.content,
+            'company': self.company,
+            'location': self.location,
+            'url': self.url,
+            'position': self.position
+        }
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -37,23 +53,19 @@ class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True)
     email = Column(String(100), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
-    email = Column(String(100), nullable=False)
     isAdmin = Column(Integer, nullable=False, default=0)
 
     def __init__(self, email, password, isAdmin):
-        self.email = email
         self.password = password
         self.email = email
         self.isAdmin = isAdmin
-class EmailList(db.Model):
-    __tablename__ = 'email_list'
-    __table_args__ = {'extend_existing': True}
-
-    id = Column(Integer, primary_key=True)
-    email = Column(String(100), nullable=False)
-
-    def __init__(self, email):
-        self.email = email
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'isAdmin': self.isAdmin,
+        }
         
 def create_tables():
     try:

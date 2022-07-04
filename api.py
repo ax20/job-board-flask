@@ -1,6 +1,7 @@
-from modules import app, SQLAlchemy
-from models import Job, User, EmailList, db
-import traceback, markdown, json, datetime, os
+from cmath import log
+from modules import app
+from models import Job, db, User
+import traceback, datetime, os
 from flask import jsonify, request, redirect
 from flask_login import login_required, current_user
 
@@ -15,7 +16,7 @@ def is_expired(job):
     return job.date_expiry < datetime.datetime.now()
 
 @login_required
-@app.route('/purge', methods=['POST'])
+@app.route('/purge/', methods=['POST'])
 def purge_jobs():
     if current_user.is_admin:
         jobs = Job.query.all()
@@ -51,7 +52,6 @@ def new_job():
         except Exception as e:
             error_log(traceback.format_exc())
             return jsonify({'error': 'Error adding job'}), 500
-
 
 @login_required
 @app.route('/edit/', methods=['POST'])
@@ -92,6 +92,25 @@ def delete_job():
 def search():
     if request.args.get('q'):
         jobs = Job.query.filter(Job.title.ilike('%' + request.args.get('q') + '%')).all()
-        return jsonify({[job.serialize() for job in jobs]})
+        return jsonify({'results': [job.serialize() for job in jobs]})
     else:
         return jsonify({'error': 'No search query provided'}), 400
+
+@login_required
+@app.route('/users/', methods=['GET', 'POST'])
+def users():
+    if current_user:
+        if request.method == 'POST':
+            user = User.query.filter_by(email=request.form['email']).first()
+            user.isAdmin = request.form['isAdmin']
+            db.session.commit()
+            return redirect('/user/')
+        elif request.method == 'GET':
+            users = User.query.all()
+            print(users)
+            if len(users) != 0:
+                return jsonify({'users': [user.serialize() for user in users]})
+            else:
+                return jsonify({'error': 'No users found'}), 404
+    else:
+        return jsonify({'error': 'You are not authorized to perform this action'}), 403

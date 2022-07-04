@@ -6,7 +6,6 @@
 {% block head %}
 {{super()}}
 {% endblock %}
-
 {% block content %}
 {% if current_user.is_authenticated %}
     <h1>You are already logged in.</h1>
@@ -15,10 +14,10 @@
     {% endif %}
 {% else %}
     <!-- If error then list out all errors -->
-    {% if errors %}
-        <ul>
+    {% if errors|length > 1 %}
+        <ul class="mb-4">
             {% for e in errors %}
-                <li>Invalid {{e}}</li>
+                <li class="text-gray-100 bg-red-500 p-2 rounded-lg inline-block">{{e}}</li>
             {% endfor %}
         </ul>
     {% endif %}
@@ -37,3 +36,5 @@
     </form>
 {% endif %}
 {% endblock %}
+{% block search_bar %}{% endblock %}
+{% block search_js %}{% endblock %}

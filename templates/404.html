@@ -1,14 +1,14 @@
 {% extends 'layout.html' %}
 {% block title %}
-    {{ config.title.prefix }} Dashboard {{ config.title.seperator }} {{ config.title.suffix }}
+    {{ config.title.prefix }} Page Not Found {{ config.title.seperator }} {{ config.title.suffix }}
 {% endblock %}
 {% block head %}
     {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="justify-center mx-auto w-full max-w-4xl">
-    <a href="/"
-    class="absolute text-xl inline-block tracking-tight text-black dark:text-white bg-zinc-300 dark:bg-white md:text-3xl inline-block p-2 rounded-lg hover:outline hover:outline-02c39 hover:outline-5">
+    <div class="max-w-2xl mx-auto px-3 mb-10">
+        <a href="/"
+    class=" text-xl inline-block tracking-tight text-black dark:text-white bg-zinc-300 dark:bg-white md:text-3xl inline-block p-2 rounded-lg hover:outline hover:outline-02c39 hover:outline-5">
     <?xml version="1.0"encoding="UTF-8"?>
     <?xml version="1.0" encoding="UTF-8"?><svg class="text-black dark:text-white" width="30"
       enable-background="new 0 0 489.075 489.075" version="1.1" viewBox="0 0 489.08 489.08" xml:space="preserve"
@@ -17,9 +17,8 @@
         d="m482.45 220.78-115.5-111.2v-88.5c0-11.4-9.4-20.8-20.8-20.8s-20.8 9.4-20.8 20.8v48.5l-66.6-64.1c-7.3-7.3-19.8-7.3-28.1 0l-223.6 215.3c-8.3 8.3-9.4 20.8-1 29.1s20.8 9.4 29.1 1l3.1-3v220.4c0 11.4 9.4 20.8 20.8 20.8h372.4c11.4 0 19.8-9.4 20.8-19.8v-219.3l2.1 2c15.2 10.5 26 3.1 29.1-2.1 7.3-8.3 7.3-21.8-1-29.1zm-200.8 227.8h-72.8v-111.3h72.8v111.3zm129 0h-88.4v-132.1c0-11.4-9.4-20.8-20.8-20.8h-113.4c-11.4 0-20.8 9.4-20.8 20.8v132.1h-87.4v-203.9h330.8v203.9zm-326.8-244.4 161.4-155 159.8 155h-321.2z" />
     </svg>
   </a>
-  <div class="mt-20 w-full flex-col">
-    <div class="flex w-full">
+        <h1 class="text-4xl font-bold tracking-tight text-gray-800 dark:text-white">Page Not Found</h1>
+        <p class="text-xl tracking-tight text-gray-800 dark:text-white">The page you are looking for does not exist.</p>
+        <img class="w-full rounded-md my-2" src="{{ url_for('static', filename='oops.gif') }}" alt="404 GIF">
     </div>
-  </div>
-</div>
-{% endblock %}
+{% endblock%}

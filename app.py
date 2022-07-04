@@ -1,14 +1,20 @@
-from modules import app, SQLAlchemy, login_manager, bcrypt
-from models import Job, User, EmailList, db
-from flask import jsonify, request, render_template, redirect, abort, url_for
-import markdown, json, os, datetime
-from flask_login import login_user, login_required, logout_user, current_user, UserMixin
+from modules import app, login_manager, bcrypt
+from models import Job, User, db
+from flask import render_template, redirect, url_for
+import json, os, datetime
+from flask_login import login_user, login_required, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
+from api import *
 
-with open(url_for(url_for('static', filename='site.config.json')), 'r') as f:
+with open('static/site.config.json', 'r') as f:
     site_data = json.load(f)
+
+def is_sytem_admin(Uemail):
+    for email in site_data['system_admins']:
+        if email == Uemail:
+            return True
 
 def has_posting_expired(job):
     return job.expires_on < datetime.datetime.now()
@@ -57,20 +63,37 @@ def job_detail(job_id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    errors = None
+    errors = []
     
+    if current_user.is_authenticated:
+        if current_user.isAdmin:
+            return redirect(url_for('dashboard'))
+        else:
+            return redirect(url_for('index'))
+
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                
-                if user.is_admin:
+                if user.isAdmin:
                     return redirect(url_for('dashboard'))
                 else:
                     return redirect(url_for('index'))
+            else:
+                errors.append("You have entered an invalid password, please try again")
+                print("1", errors)
+        else:
+            errors.append("You have entered an invalid email, please try again")
+            print("2", errors)
     else:
-        errors = form.errors
+        errors.append(form.errors)
+        print("3",errors)
+    
+    print("4",errors)
+    if not errors:
+        errors = None
+
     return render_template('login.html', form=form , config=site_data, errors=errors)
 
 @app.route('/logout')
@@ -84,12 +107,36 @@ def register():
     form = RegisterForm()
     errors = None
     
+    if current_user.is_authenticated:
+        if current_user.isAdmin:
+            return redirect(url_for('dashboard'))
+        else:
+            return redirect(url_for('index'))
+
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        user = User(email=form.email.data, email=form.email.data, password=hashed_password, isAdmin=False)
-        db.session.add(user)
+        if is_sytem_admin(form.email.data):
+            user = User(email=form.email.data, password=hashed_password, isAdmin=True)
+            db.session.add(user)
+        else:
+            user = User(email=form.email.data, password=hashed_password, isAdmin=False)
+            db.session.add(user)
+        
         db.session.commit()
         return redirect(url_for('login'))
     else:
         errors = form.errors
     return render_template('register.html', form=form, config=site_data, errors=errors)
+
+
+@app.route('/dashboard', methods=['GET'])
+@login_required
+def dashboard():
+    if current_user.isAdmin:
+        return render_template('dashboard.html', config=site_data)
+    else:
+        return redirect(url_for('index'))
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html', config=site_data), 404
