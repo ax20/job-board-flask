@@ -4,8 +4,8 @@
         "no_jobs_message": "There are no jobs available at this time."
     },
     "title": {
-        "suffix": " - Jobs",
-        "prefix": "Jobs",
+        "suffix": "",
+        "prefix": "Low Entropy",
         "separator": " | "
     }
 }

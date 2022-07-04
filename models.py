@@ -35,14 +35,16 @@ class User(db.Model, UserMixin):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True)
-    username = Column(String(100), nullable=False, unique=True)
+    email = Column(String(100), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False)
+    isAdmin = Column(Integer, nullable=False, default=0)
 
-    def __init__(self, username, password, email):
-        self.username = username
+    def __init__(self, email, password, isAdmin):
+        self.email = email
         self.password = password
         self.email = email
+        self.isAdmin = isAdmin
 class EmailList(db.Model):
     __tablename__ = 'email_list'
     __table_args__ = {'extend_existing': True}
