@@ -8,6 +8,10 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from api import *
 
+if not os.path.exists('jobs.db'):
+    f = open('jobs.db', 'w')
+    f.close()
+
 with open('static/site.config.json', 'r') as f:
     site_data = json.load(f)
 
