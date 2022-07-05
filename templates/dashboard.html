@@ -24,9 +24,8 @@
       </select>
       <form id="new_post" method="POST" style="display:none" action="/new">
         <div class="mb-6 mr-2 inline-block">
-          <label for="expires_on" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Expires
-            On</label>
-          <input required class="rounded-lg p-2" type="date" name="expires_on" value="2022-06-10" min="2022-01-01"
+          <label for="date_expiry" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Expires On</label>
+          <input required class="rounded-lg p-2" type="date" name="date_expiry" value="2022-06-10" min="2022-01-01"
             max="2030-01-01">
         </div>
         <div class="mb-6">
@@ -50,14 +49,14 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         </div>
         <div class="mb-6" >
-          <label for="summary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Summary</label>
-          <textarea required name="summary"
+          <label for="preview" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Preview</label>
+          <textarea required name="preview"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
         </div>
         <div class="mb-6" >
-          <label for="description"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Description <span class="text-xs italic">(translates using Markdown <a class="text-blue-500" href="https://stackedit.io/app#">edit now</a>)</span></label>
-          <textarea required name="description"
+          <label for="content"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Content <span class="text-xs italic">(translates using Markdown <a class="text-blue-500" href="https://stackedit.io/app#">edit now</a>)</span></label>
+          <textarea required name="content"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
         </div>
         <div class="mb-6" >
@@ -76,9 +75,9 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
         </div>
         <div class="mb-6 mr-2 inline-block">
-          <label for="expires_on" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Expires
+          <label for="date_expiry" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Expires
             On</label>
-          <input class="rounded-lg p-2" type="date" name="expires_on" value="2022-06-10" min="2022-01-01"
+          <input class="rounded-lg p-2" type="date" name="date_expiry" value="2022-06-10" min="2022-01-01"
             max="2030-01-01" >
         </div>
         <div class="mb-6 inline-block">
@@ -106,14 +105,14 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         </div>
         <div class="mb-6">
-          <label for="summary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Summary</label>
-          <textarea name="summary"
+          <label for="preview" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Preview</label>
+          <textarea name="preview"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
         </div>
         <div class="mb-6">
-          <label for="description"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Description</label>
-          <textarea name="description"
+          <label for="content"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Content</label>
+          <textarea name="content"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
         </div>
         <div class="mb-6">

@@ -35,7 +35,7 @@ def new_job():
         new_job = Job(
             date_created = datetime.datetime.now(),
             date_modified = datetime.datetime.now(),
-            date_expiry = datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d'),
+            date_expiry = datetime.datetime.strptime(request.form['date_expiry'], '%Y-%m-%d'),
             title = request.form['title'],
             preview = request.form['preview'],
             content = request.form['content'],
@@ -59,7 +59,7 @@ def edit_job():
     if current_user.is_admin:
         job = Job.query.filter_by(id=request.form['id']).first()
         job.date_modified = datetime.datetime.now()
-        job.date_expiry = job.date_expiry if request.form['expires_on'] == '' else datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d')
+        job.date_expiry = job.date_expiry if request.form['date_expiry'] == '' else datetime.datetime.strptime(request.form['date_expiry'], '%Y-%m-%d')
         job.title = job.title if request.form['title'] == '' else request.form['title']
         job.preview = job.preview if request.form['preview'] == '' else request.form['preview']
         job.content = job.content if request.form['content'] == '' else request.form['content']
@@ -96,6 +96,17 @@ def search():
         return jsonify({'results': [job.serialize() for job in jobs]})
     else:
         return jsonify({'error': 'No search query provided'}), 400
+
+@login_required
+@app.route('/config/', methods=['POST'])
+def config():
+    if current_user.is_admin:
+        config = request.form['config']
+        with open('static/site_config.json', 'w') as f:
+            f.write(config)
+        return jsonify({'success': 'Configuration updated'}), 200
+    else:
+        return jsonify({'error': 'You are not authorized to perform this action'}), 403
 
 @login_required
 @app.route('/users/', methods=['GET', 'POST'])

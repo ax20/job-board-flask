@@ -1,7 +1,7 @@
 from modules import app, login_manager, bcrypt
 from models import Job, User, db
 from flask import render_template, redirect, url_for
-import json, os, datetime
+import json, os, datetime, markdown
 from flask_login import login_user, login_required, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -52,6 +52,7 @@ def index():
 @app.route('/jobs/<int:job_id>', methods=['GET'])
 def job_detail(job_id):
     job = Job.query.filter_by(id=job_id).first()
+    job.content = markdown.markdown(job.content)
     if job:
         if has_posting_expired(job):
             return render_template('job_detail.html', config=site_data, job=job, expired=True)
@@ -124,6 +125,13 @@ def register():
         errors = form.errors
     return render_template('register.html', form=form, config=site_data, errors=errors)
 
+@login_required
+@app.route('/config/', methods=['GET'])
+def site_config():
+    if current_user.isAdmin:
+        return render_template('config.html', config=site_data, fconfig=json.dumps(site_data, indent=2))
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/dashboard/', methods=['GET'])
 @login_required
