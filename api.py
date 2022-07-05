@@ -18,7 +18,7 @@ def is_expired(job):
 @login_required
 @app.route('/purge/', methods=['POST'])
 def purge_jobs():
-    if current_user.is_admin:
+    if current_user.isAdmin:
         jobs = Job.query.all()
         for job in jobs:
             if is_expired(job):
@@ -31,7 +31,7 @@ def purge_jobs():
 @login_required
 @app.route('/new/', methods=['POST'])
 def new_job():
-    if current_user.is_admin:
+    if current_user.isAdmin:
         new_job = Job(
             date_created = datetime.datetime.now(),
             date_modified = datetime.datetime.now(),
@@ -56,7 +56,7 @@ def new_job():
 @login_required
 @app.route('/edit/', methods=['POST'])
 def edit_job():
-    if current_user.is_admin:
+    if current_user.isAdmin:
         job = Job.query.filter_by(id=request.form['id']).first()
         job.date_modified = datetime.datetime.now()
         job.date_expiry = job.date_expiry if request.form['date_expiry'] == '' else datetime.datetime.strptime(request.form['date_expiry'], '%Y-%m-%d')
@@ -80,7 +80,7 @@ def edit_job():
 @login_required
 @app.route('/delete/', methods=['POST'])
 def delete_job():
-    if current_user.is_admin:
+    if current_user.isAdmin:
         job = Job.query.filter_by(id=request.form['id']).first()
         db.session.delete(job)
         db.session.commit()
@@ -100,7 +100,7 @@ def search():
 @login_required
 @app.route('/config/', methods=['POST'])
 def config():
-    if current_user.is_admin:
+    if current_user.isAdmin:
         config = request.form['config']
         with open('static/site_config.json', 'w') as f:
             f.write(config)
