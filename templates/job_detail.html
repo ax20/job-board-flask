@@ -1,16 +1,21 @@
-{% extends "base.html" %}
+{% extends 'layout.html' %}
 {% block title %}
 {{ config.title.prefix }} {{ job.title }} {{ config.title.seperator }} {{ config.title.suffix }}
 {% endblock %}
 {% block head %}
-{{ super() }}
+    {{ super() }}
 {% endblock %}
 {% block content %}
-
+{% block search_bar %} {% endblock %}
 <div class="mx-auto mb-16 flex w-full max-w-4xl flex-col items-start justify-center">
-  <a href="/" class="mb-8 text-xl fonprojectst-bold tracking-tight text-black dark:text-white bg-zinc-300 dark:bg-white md:text-3xl inline-block p-2 rounded-lg hover:outline hover:outline-02c39 hover:outline-5">
-    <?xml version="1.0"encoding="UTF-8"?><?xml version="1.0" encoding="UTF-8"?><svg class="text-black dark:text-white" width="30" enable-background="new 0 0 489.075 489.075" version="1.1" viewBox="0 0 489.08 489.08" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"> <path d="m482.45 220.78-115.5-111.2v-88.5c0-11.4-9.4-20.8-20.8-20.8s-20.8 9.4-20.8 20.8v48.5l-66.6-64.1c-7.3-7.3-19.8-7.3-28.1 0l-223.6 215.3c-8.3 8.3-9.4 20.8-1 29.1s20.8 9.4 29.1 1l3.1-3v220.4c0 11.4 9.4 20.8 20.8 20.8h372.4c11.4 0 19.8-9.4 20.8-19.8v-219.3l2.1 2c15.2 10.5 26 3.1 29.1-2.1 7.3-8.3 7.3-21.8-1-29.1zm-200.8 227.8h-72.8v-111.3h72.8v111.3zm129 0h-88.4v-132.1c0-11.4-9.4-20.8-20.8-20.8h-113.4c-11.4 0-20.8 9.4-20.8 20.8v132.1h-87.4v-203.9h330.8v203.9zm-326.8-244.4 161.4-155 159.8 155h-321.2z"/></svg>
-  </a>
+    <!-- If current_user isAdmin then show the uniqid -->
+    {% if current_user.isAdmin %}
+    <div class="text-center">
+        <p class="text-gray-500 bg-blue-500 text-xl">
+            Unique ID: {{ job.uniqid }}
+        </p>
+    </div>
+    {% endif %}
   <a href="{{ job.url }}" class="mb-3 text-3xl font-bold tracking-tight text-black dark:text-white md:text-5xl inline-block italic">
     {{ job.title }} <svg class="absolute bg-blue-500 rounded-lg ml-2 mb-8 inline-block"  xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
   </a>
@@ -24,6 +29,5 @@
   <div class="relative w-full text-black dark:text-white">
     <p>{{ job.description | safe }}</p>
   </div>
-
 </div>
 {% endblock %}

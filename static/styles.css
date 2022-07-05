@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 html {
     overflow: scroll;
     overflow-x: hidden;
@@ -11,11 +12,6 @@ html {
     background: #FF0000;
 }
 
-a {
-    text-decoration: underline;
-    transition: color 0.4s;
-}
-
-a:hover {
-    color: #028090;
+body {
+    font-family: 'Open Sans', sans-serif;
 }

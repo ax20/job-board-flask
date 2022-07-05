@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% block header %}
+    <meta charset="utf-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% endblock %}
+    {% block customHead %}{% endblock %}
+</head>
+{}
+<body class="bg-stone-100 dark:bg-gray-900">
+    <main class="flex flex-1 flex-col mt-8">
+        <div class="flex mx-auto flex-1 flex-col justify-center px-4 bg-f3f2ef dark:bg-gray-900 sm:px-8">
+            <div class="mx-auto justify-content-center mb-10 flex w-full max-w-4xl flex-col"><img
+                    src="https://lowentropy.org/wp-content/uploads/2021/01/Group-72.png" width=590>
+            </div>
+            <nav class="mb-6 mt-2">
+                <ul class="text-gray-100 text-lg">
+                    <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
+                        <a href="/">🏠 Home</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
+                        <a href="/logout">👋 Logout</a>
+                    </li>
+                    {% elif not current_user.is_authenticated %}
+                    <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
+                        <a href="/login">👤 Login</a>
+                    </li>
+                    {% endif %}
+                    {% if current_user.isAdmin %}
+                    <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
+                        <a href="/dashboard">⚙️ Dashboard</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% if current_user.is_authenticated %}
+            {% block search_bar %}
+            <form id="search_form" class=" rounded pt-6 pb-8 mb-4 w-full max-w-xl" method="get">
+                <h2 class="text-xl text-white font-semibold my-2">Search for a job</h2>
+                  <div class="mb-4">
+                    <input class="rounded w-full py-2 px-3 text-gray-700"
+                      id="search_term" type="text" q="" placeholder="ex: Volunteer at Low Entropy" />
+                  </div>
+                  <div class="flex justify-between w-full">
+                    <ul id="jobs" class="rounded w-full text-gray-700 dark:text-white">
+                    </ul>
+                  </div>
+            </form>
+            {% endblock %}
+            {% endif %}
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="flex flex-col items-center print:hidden text-gray-100 bg-stone-100 dark:bg-gray-900 mb-4">
+        <div class="text-center">
+            <p class="text-gray-500 text-sm">
+                &copy; 2022 {{ config.site.author }}. All rights reserved.
+                <br />
+                Built with
+                <a href="https://flask.palletsprojects.com/" class="hover:underline">Flask</a>
+            </p>
+        </div>
+    </footer>
+    
+    {% if current_user.is_authenticated %}
+    {% block search_js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        let timeoutID = null;
+
+        function formatJobs(data) {
+            let jobs = $('#jobs');
+            for (let i = 0; i < data.length; i++) {
+                let job = data[i];
+                let li = $('<li class="flex justify-between items-center p-2 rounded-lg hover:bg-zinc-300 dark:bg-white">');
+                let a = $('<a class="text-black dark:text-white" href="' + job.url + '">');
+                a.text(job.title);
+                li.append(a);
+                jobs.append(li);
+            }
+        }
+
+        function getJobs(value) {
+        $.ajax({
+            url: '/search/',
+            type: 'GET',
+            data: {
+            q: value
+            },
+            success: function(data) {
+            console.log(data);
+            if (data['results'].length == 0) {
+                $('#jobs').html("<h3>No jobs found</h3>")
+            } else {
+                formatJobs(data['results']);
+            }
+            }
+        });
+        }
+
+        $('#search_term').keyup(function(e) {
+            clearTimeout(timeoutID);
+            const value = e.target.value
+            timeoutID = setTimeout(() => getJobs(value), 500)
+        });
+        </script>
+    {% endblock %}
+    {% endif %}
+    {% block more_js %}
+    {% endblock %}
+</body>
+
+</html>

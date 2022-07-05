@@ -1,154 +1,148 @@
-from modules import app, SQLAlchemy
-from models import Job, db, User
-import traceback # ! DEBUG
-from flask import jsonify, render_template, request, abort, redirect
-import datetime, json, os, markdown
+from modules import app, login_manager, bcrypt
+from models import Job, User, db
+from flask import render_template, redirect, url_for
+import json, os, datetime
+from flask_login import login_user, login_required, logout_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import InputRequired, Length, ValidationError
+from api import *
+
+with open('static/site.config.json', 'r') as f:
+    site_data = json.load(f)
+
+def is_sytem_admin(Uemail):
+    for email in site_data['system_admins']:
+        if email == Uemail:
+            return True
+
+def has_posting_expired(job):
+    return job.date_expiry < datetime.datetime.now()
 
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 
-# Load Site Configurations
-with open('site.json', 'r') as f:
-    site_data = json.load(f)
+"""
+When the user enters the page they land on the email wall
+- If the email is in the database, they are redirected to the job listings page
+"""
+class RegisterForm(FlaskForm):
+    password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)])
+    email = StringField(validators=[InputRequired(), Length(min=4, max=30)])
+    submit = SubmitField("Register")
+    
+    def validate_email(self, email):
+        exisiting_email = User.query.filter_by(email=email.data).first()
+        if exisiting_email:
+            raise ValidationError("That email already exists. Please choose a different one ")
 
-def has_posting_expired(job):
-    return job.expires_on < datetime.datetime.now()
+class LoginForm(FlaskForm):
+    email = StringField(validators=[InputRequired(), Length(min=4, max=30)])
+    password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)])
+    submit = SubmitField("Login")
 
-def purge_jobs():
-    for (job) in Job.query.all():
-        if has_posting_expired(job):
-            delete_job(job.id)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-def new_job(model):
-    try:
-        db.session.add(model)
-        db.session.commit()
-    except Exception as e:
-        print(f"Error adding job: {e}")
-        with open('db_creation.log', 'a') as f:
-            f.write(traceback.format_exc())
-
-def modify_job(id, new_model):
-    try:
-        job = Job.query.filter_by(id=id).first()
-        job.posted_on = new_model.posted_on if new_model.posted_on != None else job.posted_on
-        job.expires_on = new_model.expires_on if new_model.expires_on != "" else job.expires_on
-        job.title = new_model.title if new_model.title != "" else job.title
-        job.description = new_model.description if new_model.description != "" else job.description
-        job.summary = new_model.summary if new_model.summary != "" else job.summary
-        job.location = new_model.location if new_model.location != "" else job.location
-        job.company = new_model.company if new_model.company != "" else job.company
-        job.url = new_model.url if new_model.url != "" else job.url
-        db.session.commit()
-    except Exception as e:
-        print(f"Error modifying job: {e}")
-        with open('db_creation.log', 'a') as f:
-            f.write(traceback.format_exc())
-
-def delete_job(id):
-    try:
-        job = Job.query.filter_by(id=id).first()
-        db.session.delete(job)
-        db.session.commit()
-    except Exception as e:
-        print(f"Error deleting job: {e}")
-        with open('db_creation.log', ) as f:
-            f.write(traceback.format_exc())
-        return abort(404)
-
-@app.route('/new/', methods=['POST'])
-def new():
-    if request.method =="POST":
-        new_posting = Job(
-            posted_on = datetime.datetime.now(),
-            expires_on = datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d'),
-            title = request.form['title'],
-            summary = request.form['summary'],
-            description = request.form['description'],
-            company = request.form['company'],
-            location = request.form['location'],
-            url = request.form['url'],
-            position = request.form['position']
-        )
-        try:
-            new_job(new_posting)
-        except Exception as e:
-            print(f"Error adding job: {e}")
-            with open('db_creation.log', ) as f:
-                f.write(traceback.format_exc())
-            abort(500)
-
-        return redirect('/')
-    else:
-        return "Error"
-
-@app.route('/edit/', methods=['POST'])
-def edit():
-    fposted_on = "" if request.form['posted_on'] == None else datetime.datetime.strptime(request.form['posted_on'], '%Y-%m-%d')
-    fexpires_on = "" if request.form['expires_on'] == None else datetime.datetime.strptime(request.form['expires_on'], '%Y-%m-%d')
-    ftitle = "" if request.form['title'] == None else request.form['title']
-    fsummary = "" if request.form['summary'] == None else request.form['summary']
-    fdescription =   "" if request.form['description'] == None else request.form['description']
-    fcompany = "" if request.form['company'] == None else request.form['company']
-    flocation = "" if request.form['location'] == None else request.form['location']
-    furl = "" if request.form['url'] == None else request.form['url']
-    fposition = "" if request.form['position'] == None else request.form['position']
-    new_posting = Job(posted_on=fposted_on, position=fposition, expires_on=fexpires_on, title=ftitle, summary=fsummary, description=fdescription, company=fcompany, location=flocation, url=furl)
-    modify_job(request.form['id'], new_posting)
-    return redirect('/')
-
-@app.route('/delete/', methods=['POST'])
-def delete():
-    return delete_job(request.form['id'])
-
-@app.route('/search/<string:args>', methods=['GET'])
-def search(args):
-    if request.method == "GET":
-        search_results = Job.query.filter(Job.title.like(f"%{args}%")).all()
-        if len(search_results) > 0:
-            results = ""
-            for result in search_results:
-                results+=f"<li class='w-full my-2'><a class='rounded-lg p-3 bg-slate-50 dark:bg-gray-600' href='/job/{result.id}'>{result.title}</a></li>"
-            return results
-        else:
-            return jsonify([])
-    else:
-        abort(405)
-
-@app.route('/', methods=['GET'])
+@login_required
+@app.route('/')
 def index():
-    if request.method == "GET":
-        jobs = Job.query.all()
-        filtered_jobs = [job for job in jobs if not has_posting_expired(job)]
-        for job in filtered_jobs:
-            job.posted_on = job.posted_on.strftime("%d/%m/%y")
+    return render_template('index.html', config=site_data)
 
-        return render_template('index.html', jobs=filtered_jobs, config=site_data)
-
-@app.route('/job/<int:id>/', methods=['GET'])
-def job(id):
-    job = Job.query.filter_by(id=id).first()
-    if job is None:
-        abort(404)
-    if has_posting_expired(job):
-        return abort(410)
-    job.posted_on = job.posted_on.strftime('%B, %d, %Y')
-    job.expires_on = job.expires_on.strftime('%B, %d, %Y')
-    job.description = markdown.markdown(job.description)
-
-    return render_template('job.html', job=job, config=site_data)
-
-@app.route('/purge/<string:password>/', methods=['GET'])
-def purge(password):
-    if password == ACCESS_TOKEN:
-        purge_jobs()
-        return redirect('/dashboard/' + password)
+@app.route('/jobs/<int:job_id>', methods=['GET'])
+def job_detail(job_id):
+    job = Job.query.filter_by(id=job_id).first()
+    if job:
+        if has_posting_expired(job):
+            return render_template('job_detail.html', config=site_data, job=job, expired=True)
+        else:
+            return render_template('job_detail.html', config=site_data, job=job)
     else:
-        return abort(500)
+        return render_template('job_detail.html', config=site_data, job=None)
 
-@app.route('/dashboard/<string:password>/', methods=['GET'])
-def dashboard(password):
-    if password:
-        if password == ACCESS_TOKEN:
-            return render_template('dashboard.html', config=site_data)
-        return abort(401)
-    return abort(404)
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    errors = []
+    
+    if current_user.is_authenticated:
+        if current_user.isAdmin:
+            return redirect(url_for('dashboard'))
+        return redirect(url_for('index'))
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user)
+                if user.isAdmin:
+                    return redirect(url_for('dashboard'))
+                else:
+                    return redirect(url_for('index'))
+            else:
+                errors.append("You have entered an invalid password, please try again")
+        else:
+            errors.append("You have entered an invalid email, please try again")
+    else:
+        # ternary operator that checks if errrors is empty then return [] else return errors        
+        errors.append(form.errors)
+    
+    # bandage fix to error page
+    errors = [] if str(errors) == "[{}]" else errors
+
+    return render_template('login.html', form=form , config=site_data, errors=errors)
+
+@app.route('/logout/')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/register/', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    errors = None
+    
+    if current_user.is_authenticated:
+        if current_user.isAdmin:
+            return redirect(url_for('dashboard'))
+        else:
+            return redirect(url_for('index'))
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data)
+        if is_sytem_admin(form.email.data):
+            user = User(email=form.email.data, password=hashed_password, isAdmin=True)
+            db.session.add(user)
+        else:
+            user = User(email=form.email.data, password=hashed_password, isAdmin=False)
+            db.session.add(user)
+        
+        db.session.commit()
+        return redirect(url_for('login'))
+    else:
+        errors = form.errors
+    return render_template('register.html', form=form, config=site_data, errors=errors)
+
+
+@app.route('/dashboard/', methods=['GET'])
+@login_required
+def dashboard():
+    if current_user.isAdmin:
+        return render_template('dashboard.html', config=site_data)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/expired_jobs/', methods=['GET'])
+@login_required
+def expired_jobs():
+    if current_user.isAdmin:
+        jobs = Job.query.all()
+        jobs = [job for job in jobs if has_posting_expired(job)]
+        return render_template('expired_jobs.html', config=site_data, jobs=jobs, expired=True)
+    else:
+        return redirect(url_for('index'))
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html', config=site_data), 404
