@@ -19,7 +19,7 @@ with open('static/site.config.json', 'r') as f:
     site_data = json.load(f)
 
 def is_sytem_admin(Uemail):
-    for email in site_data['system_admins']:
+    for email in site_data['system_administrators']:
         if email == Uemail:
             return True
 
