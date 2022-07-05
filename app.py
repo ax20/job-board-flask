@@ -154,3 +154,7 @@ def expired_jobs():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', config=site_data), 404
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return redirect(url_for('index'))
