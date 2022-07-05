@@ -1,5 +1,6 @@
+from venv import create
 from modules import app, login_manager, bcrypt
-from models import Job, User, db
+from models import Job, User, db, create_tables
 from flask import render_template, redirect, url_for
 import json, os, datetime, markdown
 from flask_login import login_user, login_required, logout_user
@@ -11,6 +12,8 @@ from api import *
 if not os.path.exists('jobs.db'):
     f = open('jobs.db', 'w')
     f.close()
+    create_tables()
+
 
 with open('static/site.config.json', 'r') as f:
     site_data = json.load(f)
