@@ -4,9 +4,9 @@
         "no_jobs_message": "There are no jobs available at this time."
     },
     "title": {
-        "suffix": "",
-        "prefix": "Low Entropy",
-        "separator": " | "
+        "suffix": "Low Entropy",
+        "prefix": "",
+        "seperator": "-"
     },
     "system_administrators": [
         "ashwincharath@gmail.com",

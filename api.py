@@ -88,6 +88,7 @@ def delete_job():
     else:
         return jsonify({'error': 'You are not authorized to perform this action'}), 403
 
+@login_required
 @app.route('/search/', methods=['GET'])
 def search():
     if request.args.get('q'):

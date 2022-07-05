@@ -27,17 +27,23 @@
                     <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
                         <a href="/">🏠 Home</a>
                     </li>
-                    {% if not current_user.is_authenticated %}
+                    {% if current_user.is_authenticated %}
+                    <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
+                        <a href="/logout">👤 Logout</a>
+                    </li>
+                    {% elif not current_user.is_authenticated %}
                     <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
                         <a href="/login">👤 Login</a>
                     </li>
-                    {% elif current_user.isAdmin %}
+                    {% endif %}
+                    {% if current_user.isAdmin %}
                     <li class="inline-block px-1.5 py-1 duration-300 hover:bg-gray-800 rounded-lg">
                         <a href="/dashboard">⚙️ Dashboard</a>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
+            {% if current_user.is_authenticated %}
             {% block search_bar %}
             <form id="search_form" class=" rounded pt-6 pb-8 mb-4 w-full max-w-xl" method="get">
                 <h2 class="text-xl text-white font-semibold my-2">Search for a job</h2>
@@ -51,6 +57,7 @@
                   </div>
             </form>
             {% endblock %}
+            {% endif %}
             {% block content %}
             {% endblock %}
         </div>
@@ -65,6 +72,8 @@
             </p>
         </div>
     </footer>
+    
+    {% if current_user.is_authenticated %}
     {% block search_js %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -105,8 +114,10 @@
             const value = e.target.value
             timeoutID = setTimeout(() => getJobs(value), 500)
         });
-        
         </script>
+    {% endblock %}
+    {% endif %}
+    {% block more_js %}
     {% endblock %}
 </body>
 

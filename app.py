@@ -17,7 +17,7 @@ def is_sytem_admin(Uemail):
             return True
 
 def has_posting_expired(job):
-    return job.expires_on < datetime.datetime.now()
+    return job.date_expiry < datetime.datetime.now()
 
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 
@@ -68,8 +68,7 @@ def login():
     if current_user.is_authenticated:
         if current_user.isAdmin:
             return redirect(url_for('dashboard'))
-        else:
-            return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -82,27 +81,24 @@ def login():
                     return redirect(url_for('index'))
             else:
                 errors.append("You have entered an invalid password, please try again")
-                print("1", errors)
         else:
             errors.append("You have entered an invalid email, please try again")
-            print("2", errors)
     else:
+        # ternary operator that checks if errrors is empty then return [] else return errors        
         errors.append(form.errors)
-        print("3",errors)
     
-    print("4",errors)
-    if not errors:
-        errors = None
+    # bandage fix to error page
+    errors = [] if str(errors) == "[{}]" else errors
 
     return render_template('login.html', form=form , config=site_data, errors=errors)
 
-@app.route('/logout')
+@app.route('/logout/')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register/', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     errors = None
@@ -129,11 +125,21 @@ def register():
     return render_template('register.html', form=form, config=site_data, errors=errors)
 
 
-@app.route('/dashboard', methods=['GET'])
+@app.route('/dashboard/', methods=['GET'])
 @login_required
 def dashboard():
     if current_user.isAdmin:
         return render_template('dashboard.html', config=site_data)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/expired_jobs/', methods=['GET'])
+@login_required
+def expired_jobs():
+    if current_user.isAdmin:
+        jobs = Job.query.all()
+        jobs = [job for job in jobs if has_posting_expired(job)]
+        return render_template('expired_jobs.html', config=site_data, jobs=jobs, expired=True)
     else:
         return redirect(url_for('index'))
 
