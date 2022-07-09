@@ -15,7 +15,6 @@
     {% endblock %}
     {% block customHead %}{% endblock %}
 </head>
-{}
 <body class="bg-stone-100 dark:bg-gray-900">
     <main class="flex flex-1 flex-col mt-8">
         <div class="flex mx-auto flex-1 flex-col justify-center px-4 bg-f3f2ef dark:bg-gray-900 sm:px-8">
@@ -65,7 +64,7 @@
     <footer class="flex flex-col items-center print:hidden text-gray-100 bg-stone-100 dark:bg-gray-900 mb-4">
         <div class="text-center">
             <span class="text-gray-500 text-sm">
-                An open-source project by <a class="hover:underline text-gray-300" href="https://github.com/xxiz">Ashwin</a>
+                An <a class="hover:underline text-gray-300" href="https://github.com/xxiz/job-board-flask">open-source project</a> by <a class="hover:underline text-gray-300" href="https://github.com/xxiz">Ashwin</a>
                 <br />
                 <span class="text-md align-middle">
                     Powered by
@@ -85,43 +84,7 @@
     {% block search_js %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-        let timeoutID = null;
-
-        function formatJobs(data) {
-            let jobs = $('#jobs');
-            for (let i = 0; i < data.length; i++) {
-                let job = data[i];
-                let li = $('<li class="flex justify-between items-center p-2 rounded-lg hover:bg-zinc-300 dark:bg-white">');
-                let a = $('<a class="text-black dark:text-white" href="' + job.url + '">');
-                a.text(job.title);
-                li.append(a);
-                jobs.append(li);
-            }
-        }
-
-        function getJobs(value) {
-        $.ajax({
-            url: '/search/',
-            type: 'GET',
-            data: {
-            q: value
-            },
-            success: function(data) {
-            console.log(data);
-            if (data['results'].length == 0) {
-                $('#jobs').html("<h3>No jobs found</h3>")
-            } else {
-                formatJobs(data['results']);
-            }
-            }
-        });
-        }
-
-        $('#search_term').keyup(function(e) {
-            clearTimeout(timeoutID);
-            const value = e.target.value
-            timeoutID = setTimeout(() => getJobs(value), 500)
-        });
+        let timeoutID=null;function formatJobs(l){let s=$("#jobs");for(let o=0;o<l.length;o++){var a=l[o];let t=$('<li class="flex justify-between items-center p-2 rounded-lg hover:bg-zinc-300 dark:bg-white">'),e=$('<a class="text-black dark:text-white" href="'+a.url+'">');e.text(a.title),t.append(e),s.append(t)}}function getJobs(t){$.ajax({url:"/search/",type:"GET",data:{q:t},success:function(t){console.log(t),0==t.results.length?$("#jobs").html("<h3>No jobs found</h3>"):formatJobs(t.results)}})}$("#search_term").keyup(function(t){clearTimeout(timeoutID);var e=t.target.value;timeoutID=setTimeout(()=>getJobs(e),500)});
         </script>
     {% endblock %}
     {% endif %}

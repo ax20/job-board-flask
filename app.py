@@ -9,11 +9,13 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from api import *
 
+
+REGISTER_URL = os.environ.get('REGISTER_URL')
+
 if not os.path.exists('jobs.db'):
     f = open('jobs.db', 'w')
     f.close()
     create_tables()
-
 
 with open('static/site.config.json', 'r') as f:
     site_data = json.load(f)
@@ -68,7 +70,7 @@ def job_detail(job_id):
     else:
         return render_template('job_detail.html', config=site_data, job=None)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     errors = []
@@ -92,7 +94,6 @@ def login():
         else:
             errors.append("You have entered an invalid email, please try again")
     else:
-        # ternary operator that checks if errrors is empty then return [] else return errors        
         errors.append(form.errors)
     
     # bandage fix to error page
@@ -106,7 +107,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/register/', methods=['GET', 'POST'])
+@app.route(f'/{REGISTER_URL}/', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     errors = None
@@ -158,6 +159,7 @@ def expired_jobs():
     else:
         return redirect(url_for('index'))
 
+# Error Handling
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', config=site_data), 404

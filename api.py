@@ -33,8 +33,6 @@ def purge_jobs():
 def new_job():
     if current_user.isAdmin:
         new_job = Job(
-            date_created = datetime.datetime.now(),
-            date_modified = datetime.datetime.now(),
             date_expiry = datetime.datetime.strptime(request.form['date_expiry'], '%Y-%m-%d'),
             title = request.form['title'],
             preview = request.form['preview'],

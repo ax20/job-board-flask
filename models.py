@@ -21,7 +21,7 @@ class Job(db.Model):
     url = Column(String(500), nullable=True)
     position = Column(String(100), nullable=True)
 
-    def __init__(self, title, preview, content, company, location, url, position):
+    def __init__(self, date_expiry, title, preview, content, company, location, url, position):
         self.title = title
         self.preview = preview
         self.content = content
