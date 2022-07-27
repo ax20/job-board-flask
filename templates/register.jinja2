@@ -1,0 +1,55 @@
+{% extends 'layout.jinja2' %}
+{% block title %} Home {% endblock %}
+{% block styles %} {{ super() }} {% endblock %}
+{% block content %}
+<h1 class="ui header">Register</h1>
+<div class="ui divider"></div>
+<br>
+{% if current_user.is_authenticated %}
+  <script>window.location.href = '/';</script>
+{% else %}
+{% if errors %}
+        <ul>
+            {% for e in errors %}
+              <div class="ui error message">
+                <div class="header">{{e}}</div>
+                <p>
+                  {% for x in errors[e] %}
+                  {{ x }}
+                  {% endfor %}
+                </p>
+              </div>
+            {% endfor %}
+        </ul>
+{% endif %}
+<form class="ui form" method="POST" action="">
+  {{ form.hidden_tag() }}
+  <div class="field
+  {% if errors['email'] %}
+  error
+  {% endif %}
+  ">
+    <label for="email">Email</label>
+    <input required type="email" name="email" placeholder="Email">
+  </div>
+  <div class="field
+  {% if errors['password'] %}
+  error
+  {% endif %}
+  ">
+    <label>Password</label>
+    <input required type="password" name="password" placeholder="Password">
+  </div>
+  <div class="field
+  {% if errors['confirm_password'] %}
+  error
+  {% endif %}
+  ">
+    <label>Confirm Password</label>
+    <input required type="password" name="confirm_password" placeholder="Password">
+  </div>
+  <button class="ui button" type="submit">Register</button>
+</form>
+{% endif %}
+
+{% endblock %}

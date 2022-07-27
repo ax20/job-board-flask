@@ -95,6 +95,6 @@ class Email(db.Model):
 def create_tables():
     try:
         db.create_all()
-        print("Created tables")
+        print('✔️ Initalized database successfully.')
     except Exception as e:
         logger(traceback.format_exc())

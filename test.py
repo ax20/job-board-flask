@@ -1,9 +1,14 @@
 from urllib import response
-import requests
-import json
+import requests, json, sys, traceback
 from models import create_tables
+from modules import BYPASS_TOKEN
 
 api_url = 'http://localhost:5000/zoro/v1'
+
+def f():
+    create_tables()
+    print('✔️ Setup database')
+    sys.exit(0)
 
 def setup_database():
 
@@ -13,6 +18,19 @@ def setup_database():
         data = json.load(json_file)
         json_file.close()
     
+    try:
+        user = requests.post(api_url + '/bypass/', data={'token': BYPASS_TOKEN})
+        if user.status_code == 200:
+            print('✔️ POST /zoro/v1/bypass/')
+        else:
+            print('❌ POST /zoro/v1/bypass/, returned ', user.status_code)
+            print(user.text)
+            sys.exit(1)
+    except:
+        print('❌ POST /zoro/v1/bypass/ REFUSED')
+        print(traceback.format_exc())
+        sys.exit(1)
+
     for job in data:
         try:
             response = requests.post(api_url + '/jobs/add/', data=job)
@@ -21,6 +39,8 @@ def setup_database():
                 print(response.text)
             else:
                 print('❌ POST /zoro/v1/jobs/add/, returned ',response.status_code)
+                print(response.text)
+                sys.exit(1)
         except:
             print('❌ POST /zoro/v1/jobs/add/ REFUSED')
 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %} {% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"> </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    {% block styles %}
+    <link rel="stylesheet" href="/static/css/styles.css">
+    {% endblock %}
+
+</head>
+
+<body>
+    <main class="ui container">
+        <nav>
+            <div class="ui stackable compact menu">
+                <div style="padding-top:3px;padding-bottom:3px;" class="header item">
+                    <a href="{{ url_for('home') }}">
+                        <img style="width:30px;" src="/static/img/logo.png" alt="logo">
+                    </a>
+                </div>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_administrator %}
+                        <a class="item" href="{{ url_for('dashboard') }}">
+                            <span class="iconify" data-icon="ic:baseline-dashboard"></span><span style="margin-left:5px;">Dashboard</span>
+                        </a>
+                    {% endif %}
+                    <a class="item" href="{{ url_for('logout') }}">
+                        <span class="iconify" data-icon="ic:baseline-logout"></span><span style="margin-left:5px;">Logout</span>
+                    </a>
+                    <div class="ui search">
+                        <div class="ui icon input">
+                            <input type="text" placeholder="Search jobs...">
+                            <i class="search icon"></i>
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="item" href="{{ url_for('login') }}">
+                        <span class="iconify" data-icon="ic:baseline-login"></span><span style="margin-left:5px;">Login</span>
+                    </a>
+                    <a class="item" href="{{ url_for('register') }}">
+                        <span class="iconify" data-icon="akar-icons:person-add"></span><span style="margin-left:5px;">Register</span>
+                    </a>
+                {% endif %}
+            </div>
+        </nav>
+        {% block content %} {% endblock %}
+        <footer>
+            <div class="ui horizontal center">
+                <p class="item" style="padding-bottom:0px;margin-bottom:0px;">
+                    An <a href="https://github.com/xxiz/job-board/">open-source project</a> by <a href="https://github.com/xxiz">Ashwin</a>
+                </p>
+                <p class="item">
+                    Powered By: <span class="iconify" data-icon="file-icons:flask" data-width="17"></span><span class="iconify" data-icon="simple-icons:jinja" data-width="17"></span><span class="iconify" data-icon="logos:heroku-icon" data-width="16"></span><span class="iconify" data-icon="logos:semantic-ui" data-width="17"></span>
+                </p>
+            </div>
+        </footer>
+    </main>
+    
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <script defer src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+    <script defer src="/static/js/main.js"></script>
+</body>
+
+</html>

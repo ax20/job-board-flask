@@ -12,3 +12,4 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 login_manager.init_app(app)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
+BYPASS_TOKEN = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"

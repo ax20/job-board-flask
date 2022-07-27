@@ -1,0 +1,46 @@
+{% extends 'layout.jinja2' %}
+{% block title %} Home {% endblock %}
+{% block styles %} {{ super() }} {% endblock %}
+{% block content %}
+<h1 class="ui header">Administrator Functions</h1>
+<div class="ui divider"></div>
+<br>
+{% if current_user.is_authenticated and current_user.is_administrator %}
+<div class="ui horizontal two stackable cards">
+    <div class="card">
+        <div class="content">
+            <div class="header">Delete all expired listings</div>
+            <div class="description">
+                This goes through all the job listings and deletes the posts that are past their expiry date. <i>By default all expired posts are tagged as expired and left in the database.</i>
+              </div>
+            <div class="ui red message"><b>WARNING</b>: You cannot rollback this request.</div>
+            <form class="ui form" method="POST" action="">
+                <div class="field">
+                  <label>Password</label>
+                  <input required type="password" name="password" placeholder="Password">
+                </div>
+                <button class="negative ui button" type="submit">Purge</button>
+            </form>
+        </div>
+    </div>
+    <div class="card">
+        <div class="content">
+            <div class="header">Create new post</div>
+            <div class="description">
+                Create a new listing by click on the button below, you are also free to modify the post whenever needed after the fact. <i>You will be redirected to the job listing creation page.</i>
+            </div>
+            <div class="ui message"><b>NOTE</b>: Content is written in markdown for extra compability support.</div>
+            <a href="{{ url_for('home') }}">
+                <button class="positive ui button">Create New Listing</button>
+            </a>
+            
+        </div>
+    </div>
+</div>
+{% else %}
+<script>
+    window.location.href = "/";
+</script>
+{% endif %}
+
+{% endblock %}
