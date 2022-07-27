@@ -97,3 +97,34 @@ $('#add_email').submit(function(e){
         }
     });
 });
+
+$('.ui.selection.dropdown')
+  .dropdown({
+    clearable: true,
+    onChange: function(value, text, $selectedItem) {
+        let admin = $selectedItem.find('span').text();
+        if (admin == 'true') {
+          $("#is_administrator").prop("checked", true);
+        } else {
+          $("#is_user").prop("checked", true);
+        }
+      }
+  })
+;
+
+get_emails();
+function get_emails() {
+    $.ajax({
+        url: '/zoro/v1/users/',
+        type: 'get',
+        success:function(data) {
+            var users = data.users;
+            console.log(users);
+            $('#user_emails').empty();
+            for (var i = 0; i < users.length; i++) {
+                $('#user_emails').append('<div class="item" data-value="' + users[i]['email'] + '">' + users[i]['email'] + '<span style="display:none;">' + users[i]['is_administrator'] + '</span></div>');
+            }
+            $('.ui.selection.dropdown').dropdown('refresh');
+        }
+    });
+}

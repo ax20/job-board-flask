@@ -39,7 +39,7 @@
     </div>
     <div class="card">
         <div class="content">
-            <div class="header">Add user access</div>
+            <div class="header">Grant user access</div>
             <div class="description">
                 Enter the email of the user who you wish to grant access to, after which they are able to register in the system. <i>You can manage all added emails here.</i>
             </div>
@@ -55,17 +55,36 @@
     </div>
     <div class="card">
         <div class="content">
-            <div class="header">Update User Information</div>
+            <div class="header">Manage User Priviliges</div>
             <div class="description">
-                Enter the email of the user who you wish to grant access to, after which they are able to register in the system. <i>You can manage all added emails here.</i>
+                Enter the email of the user who you wish to modify, you can either grant a user administrator privelges or revoke them (<i>Revoke access only granted to system administrators</i>).
             </div>
-            <div class="ui message"><b>NOTE</b>: This only allows the user to register an account, and does not assign a password.</div>
+            <div class="ui warning message"><b>NOTE</b>: Double check before updating a users privelges as they will have access to manage all postss.</div>
             <form id="search_user" class="ui form">
                 <div class="field">
-                  <label>Email</label>
-                  <input id="search_user_email" required type="email" name="email" placeholder="Email">
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="user">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Select Friend</div>
+                        <div id="user_emails" class="menu"></div>
+                      </div>
                 </div>
-                <button class="ui button" type="submit">Add email</button>
+                <div class="inline fields">
+                    <label for="privelge">Privelge Level:</label>
+                    <div class="field">
+                      <div class="ui radio checkbox">
+                        <input id="is_administrator" type="radio" name="privelge" tabindex="0" class="hidden">
+                        <label>Administrator</label>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <div class="ui radio checkbox">
+                        <input id="is_user" type="radio" name="privelge" tabindex="0" class="hidden">
+                        <label>User</label>
+                      </div>
+                    </div>
+                </div>
+                <button class="ui button" type="submit">Update User</button>
             </form>
         </div>
     </div>

@@ -85,12 +85,6 @@ def email():
 def register():
     form = RegisterForm()
     errors = []
-    
-    if current_user.is_authenticated:
-        if current_user.is_administrator:
-            return redirect(url_for('dashboard'))
-        else:
-            return redirect(url_for('home'))
 
     if form.validate_on_submit():
         if is_system_admin(form.email.data):
@@ -99,6 +93,7 @@ def register():
             db.session.add(user)
         else:
             if EmailList.query.filter_by(email=form.email.data).first() != None:
+                hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
                 user = User(email=form.email.data, password=hashed_password, is_administrator=False)
                 db.session.add(user)
             else:

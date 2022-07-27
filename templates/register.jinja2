@@ -4,10 +4,19 @@
 {% block content %}
 <h1 class="ui header">Register</h1>
 <div class="ui divider"></div>
-<br>
 {% if current_user.is_authenticated %}
-  <script>window.location.href = '/';</script>
-{% else %}
+<div class="ui warning message">
+  <i class="close icon"></i>
+  <div class="header">
+    You are already logged in as {{ current_user.email }}!
+  </div>
+  {% if current_user.is_administrator %}
+  Head over to the <a href="/dashboard">dashboard</a> to manage posts.
+  {% else %}
+  Head over to the <a href="/">homepage</a> to view posts.
+  {% endif %}
+</div>
+{% endif %}
 {% if errors %}
         <ul>
             {% for e in errors %}
@@ -22,34 +31,21 @@
             {% endfor %}
         </ul>
 {% endif %}
-<form class="ui form" method="POST" action="">
+<form class="ui {% if current_user.is_authenticated %}disabled{% endif %} form" method="POST" action="">
   {{ form.hidden_tag() }}
-  <div class="field
-  {% if errors['email'] %}
-  error
-  {% endif %}
-  ">
+  <div class="field {% if errors['password'] %}error{% endif %}{% if current_user.is_authenticated %}disabled{% endif %}">
     <label for="email">Email</label>
     <input required type="email" name="email" placeholder="Email">
   </div>
-  <div class="field
-  {% if errors['password'] %}
-  error
-  {% endif %}
-  ">
+  <div class="field {% if errors['password'] %}error{% endif %}{% if current_user.is_authenticated %}disabled{% endif %}">
     <label>Password</label>
     <input required type="password" name="password" placeholder="Password">
   </div>
-  <div class="field
-  {% if errors['confirm_password'] %}
-  error
-  {% endif %}
-  ">
+  <div class="field {% if errors['password'] %}error{% endif %}{% if current_user.is_authenticated %}disabled{% endif %}">
     <label>Confirm Password</label>
     <input required type="password" name="confirm_password" placeholder="Password">
   </div>
-  <button class="ui button" type="submit">Register</button>
+  <button class="ui button {% if current_user.is_authenticated %}disabled{% endif %}" type="submit">Register</button>
 </form>
-{% endif %}
 
 {% endblock %}

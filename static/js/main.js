@@ -8,16 +8,32 @@ setTimeout(function () {
     $("#loading").hide();
     $("#filter").hide();
     $("#errors").html(`
-    <div class="ui error message">
-      <div class="header">User unauthorized</div>
-      <p>Please login to your account to view the contents of this page.</p>
+    <div style="margin-bottom:2em;" class="ui error message">
+      <div class="header">401: Unauthorized</div>
+      <p>Sorry, this content is protected, please <a href="/login">login</a> to view.</p>
     </div>
     `)
       .fadeIn('fast');
   }
-}, 5000);
+}, 1000);
 
-$('.ui.search')
+$('.ui.radio.checkbox')
+  .checkbox()
+;
+$('.ui.floating.dropdown')
+  .dropdown({
+    allowCategorySelection: true,
+    onChange: function (value, text, $selectedItem) {
+      let sort = $selectedItem.find('span').text();
+      console.log("sorting by " + sort);
+      $("#results").hide();
+      $("#loading").fadeIn('fast');
+      getListings(undefined, sort);
+    }
+  })
+;
+
+$('nav.ui.search')
   .search({
     apiSettings: {
       url: '/zoro/v1/jobs?q={query}'
@@ -34,8 +50,14 @@ $('.ui.search')
     });
 
 // Get the listings from the API, and return them as a JSON array
-function getListings(query = undefined) {
+function getListings(query = undefined, sort = undefined) {
+    
     let url = query != undefined ? `${API_URL}/jobs?q=${query}` : `${API_URL}/jobs/`;
+
+    if (sort !== undefined) {
+      url = `${API_URL}/jobs?filterBy=${sort}`;
+    }
+
     $.getJSON(url, function (data) {
         success = true;
         console.log("Fetch " + url);
