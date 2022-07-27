@@ -226,7 +226,10 @@ def get_emails():
 @login_required
 def add_email():
     if current_user.is_administrator:
-        email = Email(
+        if Email.query.filter_by(email=request.form.get('email')).first():
+            return jsonify({'error': 'Email already exists'}), 400
+        else:
+            email = Email(
             request.form.get('email')
         )
         try:

@@ -1,6 +1,21 @@
 const API_URL = "/zoro/v1";
+var success = false;
 
 getListings();
+
+setTimeout(function () {
+  if (!success) {
+    $("#loading").hide();
+    $("#filter").hide();
+    $("#errors").html(`
+    <div class="ui error message">
+      <div class="header">User unauthorized</div>
+      <p>Please login to your account to view the contents of this page.</p>
+    </div>
+    `)
+      .fadeIn('fast');
+  }
+}, 5000);
 
 $('.ui.search')
   .search({
@@ -22,8 +37,10 @@ $('.ui.search')
 function getListings(query = undefined) {
     let url = query != undefined ? `${API_URL}/jobs?q=${query}` : `${API_URL}/jobs/`;
     $.getJSON(url, function (data) {
+        success = true;
         console.log("Fetch " + url);
         let results = data.jobs;
+        console.log(results);
         let html = "";
         for (let i = 0; i < results.length; i++) {
             html += `
@@ -35,27 +52,15 @@ function getListings(query = undefined) {
                   <a>$${results[i].salary}</a>
                 </div>
                 <div class="description">
-                  ${atob(results[i].content).substring(0, 100)}
+                  ${results[i].content}
                 </div>
                 <p></p>
               </div>
             </div>`;
         }
         $("#results").hide();
+        $("#filter").removeClass("disabled");
         $("#loading").fadeOut('fast');
         $("#results").html(html).delay(200).fadeIn('slow');
-    })
-    ;
-    ;
-}
-
-// Update a div with the results of the search
-function setResults(JSON) {
-    let results = JSON.jobs;
-    
-}
-
-// Take JSON input and sort it by the given key
-function sortListings(JSON, sortTerm) {
-
+    });
 }

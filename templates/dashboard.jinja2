@@ -1,6 +1,7 @@
 {% extends 'layout.jinja2' %}
 {% block title %} Home {% endblock %}
-{% block styles %} {{ super() }} {% endblock %}
+{% block styles %} {{ super() }}
+{% endblock %}
 {% block content %}
 <h1 class="ui header">Administrator Functions</h1>
 <div class="ui divider"></div>
@@ -36,7 +37,40 @@
             
         </div>
     </div>
+    <div class="card">
+        <div class="content">
+            <div class="header">Add user access</div>
+            <div class="description">
+                Enter the email of the user who you wish to grant access to, after which they are able to register in the system. <i>You can manage all added emails here.</i>
+            </div>
+            <div class="ui message"><b>NOTE</b>: This only allows the user to register an account, and does not assign a password.</div>
+            <form id="add_email" class="ui form">
+                <div class="field">
+                  <label>Email</label>
+                  <input id="add_email_email" required type="email" name="email" placeholder="Email">
+                </div>
+                <button class="ui button" type="submit">Add email</button>
+            </form>
+        </div>
+    </div>
+    <div class="card">
+        <div class="content">
+            <div class="header">Update User Information</div>
+            <div class="description">
+                Enter the email of the user who you wish to grant access to, after which they are able to register in the system. <i>You can manage all added emails here.</i>
+            </div>
+            <div class="ui message"><b>NOTE</b>: This only allows the user to register an account, and does not assign a password.</div>
+            <form id="search_user" class="ui form">
+                <div class="field">
+                  <label>Email</label>
+                  <input id="search_user_email" required type="email" name="email" placeholder="Email">
+                </div>
+                <button class="ui button" type="submit">Add email</button>
+            </form>
+        </div>
+    </div>
 </div>
+<script defer src="/static/js/dashboard.js"></script>
 {% else %}
 <script>
     window.location.href = "/";
