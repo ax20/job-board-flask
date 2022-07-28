@@ -1,4 +1,4 @@
-from modules import app, db, login_manager, BYPASS_TOKEN
+from modules import app, db, login_manager, BYPASS_TOKEN, bcrypt
 import traceback, datetime
 from models import Job, User, Email
 from flask import request, jsonify, abort
@@ -295,7 +295,7 @@ def bypass_token():
     if request.form.get('token') == BYPASS_TOKEN:
         user = User(
             email="ashwincharath@gmail.com",
-            password="test123",
+            password=bcrypt.generate_password_hash("test123").decode('utf-8'),
             is_administrator=True
         )
         try:

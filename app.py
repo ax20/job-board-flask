@@ -1,10 +1,9 @@
-from inspect import trace
-from tkinter import E
 from modules import app, login_manager, bcrypt, db
-from flask import render_template, redirect, url_for, request, session
-from models import User
+from flask import render_template, redirect, url_for, request
+from models import User, create_tables
 from models import Email as EmailList
 from api import *
+import sys
 from flask_login import login_required, current_user, logout_user, login_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -15,6 +14,26 @@ with open('site.json') as f:
     config = json.load(f)
     f.close()
 
+h = True
+while h:
+    with open('data/database.db', 'w') as f:
+        f.write('')
+        f.close()
+
+    create_tables()
+
+    with open('site.json') as f:            
+        config = json.load(f)
+        for em in config['administrators']:
+            email = EmailList(em)
+            print(email.email)
+            try:
+                db.session.add(email)
+                db.session.commit()
+            except Exception as e:
+                traceback.print_exc(file=sys.stdout)
+                sys.exit(1)
+    h = False
 class RegisterForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Email()])
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)])

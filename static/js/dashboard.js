@@ -53,6 +53,40 @@ $.uiAlert = function(options) {
   
 };
 
+$("#search_user").submit(function(e) {
+  e.preventDefault();
+  $.ajax({
+    url: "/zoro/v1/users/edit",
+    type: "POST",
+    data: {
+      email: $("#user_modify").val(),
+    },
+    success: function(data) {
+      $.uiAlert({
+        textHead: 'Success',
+        text: "Updated permissions for " + $('#user_modify').val(),
+        bgcolor: '#19c3aa',
+        textcolor: '#fff',
+        position: 'top-right',
+        icon: 'checkmark box',
+        time: 1
+    });
+    $('"#user_modify').val('');
+  },
+  error: function(data) {
+      $.uiAlert({
+        textHead: 'Error',
+        text: "Could not update permissions for " + $('#user_modify').val(),
+        bgcolor: '#ff0000',
+        textcolor: '#fff',
+        position: 'top-right',
+        icon: 'remove',
+        time: 1
+    });
+  }
+  });
+});
+
 $('#add_email').submit(function(e){
     e.preventDefault();
     $.ajax({

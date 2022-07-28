@@ -27,7 +27,7 @@ $('.ui.floating.dropdown')
       let sort = $selectedItem.find('span').text();
       console.log("sorting by " + sort);
       $("#results").hide();
-      $("#loading").fadeIn('fast');
+      $("#loading").fadeIn('fast'); 
       getListings(undefined, sort);
     }
   })
@@ -83,6 +83,15 @@ function getListings(query = undefined, sort = undefined) {
         $("#results").hide();
         $("#filter").removeClass("disabled");
         $("#loading").fadeOut('fast');
-        $("#results").html(html).delay(200).fadeIn('slow');
+        if (results.length > 0) {
+          $("#results").html(html).delay(200).fadeIn('slow');
+        } else {
+          $("#results").html(`
+          <div style="margin-bottom:2em;" class="ui message">
+            <div class="header">No posts yet!</div>
+            <p>Seems like there are no active posts at the moment, check back here later!</p>
+          </div>`).delay(200).fadeIn('slow');
+        }
+        
     });
 }
