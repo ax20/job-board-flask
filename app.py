@@ -15,7 +15,12 @@ with open('site.json') as f:
     f.close()
 
 # create database file
-with open('data/database.db', 'x'):
+try:
+    with open('data/database.db', 'x') as f:
+        f.write('')
+        f.close()
+except FileExistsError:
+    print("Database file already exists")
     pass
 
 # create tables
