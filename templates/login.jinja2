@@ -5,20 +5,17 @@
 <h1 class="ui header">Login</h1>
 <div class="ui divider"></div>
 <br>
-{% if current_user.is_authenticated %}
-{% else %}
-<form class="ui form" method="POST" action="">
+<form class="ui {% if current_user.is_authenticated %}disabled{% endif %} form" method="POST" action="">
   {{ form.hidden_tag() }}
-  <div class="field">
+  <div class="{% if current_user.is_authenticated %}disabled{% endif %} field">
     <label for="email">Email</label>
     <input required type="email" name="email" placeholder="Email">
   </div>
-  <div class="field">
+  <div class="{% if current_user.is_authenticated %}disabled{% endif %} field">
     <label>Password</label>
     <input required type="password" name="password" placeholder="Password">
   </div>
   <button class="ui button" type="submit">Login</button>
 </form>
-{% endif %}
 
 {% endblock %}

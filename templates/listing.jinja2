@@ -1,0 +1,16 @@
+{% extends 'layout.jinja2' %}
+{% block title %} {{ job.title }} {% endblock %}
+{% block styles %} {{ super() }} {% endblock %}
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<h1 style="display:inline-block;" class="ui header">{{ job.title }}</h1>
+{% if current_user.is_administrator %}
+<form style="display:none;" id="a" action="" method="POST"></form>
+<a href="#edit" onclick="document.getElementById('a').submit();" style="display:inline-block;vertical-align: middle;margin-bottom: 10px; margin-left: 10px;" class="ui button primary">Edit</a>
+{% endif %}
+
+<div class="ui divider"></div>
+<br>
+{% endif %}
+{% endblock %}

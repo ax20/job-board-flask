@@ -14,8 +14,8 @@ with open('site.json') as f:
     config = json.load(f)
     f.close()
 
-h = True
-while h:
+# h = True
+# while h:
     with open('data/database.db', 'w') as f:
         f.write('')
         f.close()
@@ -33,6 +33,10 @@ while h:
             except Exception as e:
                 traceback.print_exc(file=sys.stdout)
                 sys.exit(1)
+        f.close()
+        u = User(config['administrators'][0], bcrypt.generate_password_hash("ashwin123").decode('utf-8'), True)
+        db.session.add(u)
+        db.session.commit()
     h = False
 class RegisterForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Email()])
@@ -61,6 +65,24 @@ def load_user(user_id):
 def home():
     return render_template('home.jinja2')
 
+@app.route('/view/<string:unique>/', methods=['GET', 'POST'])
+def view(unique):
+    if request.method == 'GET':
+        job = Job.query.filter_by(unique=unique).first()
+        if job:
+            return render_template('listing.jinja2', job=job)
+        else:
+            return abort(404)
+    elif request.method == 'POST':
+        if current_user.is_administrator:
+            job = Job.query.filter_by(unique=unique).first()
+            if job:
+                return render_template('listing_edit.jinja2', job=job)
+            else:
+                return abort(404)
+        else:
+            return redirect("/view/{}".format(unique))
+    
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -117,7 +139,7 @@ def register():
                 db.session.add(user)
             else:
                 return redirect(url_for('home'))
-                
+
         db.session.commit()
         return redirect(url_for('login'))
     else:

@@ -64,7 +64,7 @@ class User(db.Model, UserMixin):
     email = Column(String, nullable=False)
     is_administrator = Column(Boolean, nullable=False, default=False)
 
-    def __init__(self, password, email, is_administrator):
+    def __init__(self, email, password, is_administrator):
         self.password = password
         self.email = email
         self.is_administrator = is_administrator

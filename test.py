@@ -5,6 +5,24 @@ from modules import BYPASS_TOKEN
 
 api_url = 'http://localhost:5000/zoro/v1'
 
+def add_jobs():
+    with open('test_jobs.json') as json_file:
+        data = json.load(json_file)
+        json_file.close()
+    
+    for job in data:
+        try:
+            response = requests.post(api_url + '/jobs/add/', data=job)
+            if response.status_code == 200:
+                print('✔️ POST /zoro/v1/jobs/add/')
+                print(response.text)
+            else:
+                print('❌ POST /zoro/v1/jobs/add/, returned ',response.status_code)
+                print(response.text)
+                sys.exit(1)
+        except:
+            print('❌ POST /zoro/v1/jobs/add/ REFUSED')
+
 def f():
     create_tables()
     print('✔️ Setup database')
@@ -117,6 +135,6 @@ def check_endpoints():
         print('❌ DELETE /zoro/v1/jobs/delete/ REFUSED')
 
 if __name__ == '__main__':
-    setup_database()
-    check_endpoints()
-    
+    # setup_database()
+    # check_endpoints()
+    add_jobs()

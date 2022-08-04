@@ -55,7 +55,7 @@ function getListings(query = undefined, sort = undefined) {
     let url = query != undefined ? `${API_URL}/jobs?q=${query}` : `${API_URL}/jobs/`;
 
     if (sort !== undefined) {
-      url = `${API_URL}/jobs?filterBy=${sort}`;
+      url = `${API_URL}/jobs?sortBy=${sort}`;
     }
 
     $.getJSON(url, function (data) {
@@ -66,7 +66,8 @@ function getListings(query = undefined, sort = undefined) {
         let html = "";
         for (let i = 0; i < results.length; i++) {
             html += `
-            <div class="ui card">
+              <a href="/view/${results[i].unique}/">
+              <div class="ui card">
               <div class="content">
                 <div class="header">${results[i].title}</div>
                 <div class="meta">
@@ -78,7 +79,8 @@ function getListings(query = undefined, sort = undefined) {
                 </div>
                 <p></p>
               </div>
-            </div>`;
+              </div>
+              </a>`;
         }
         $("#results").hide();
         $("#filter").removeClass("disabled");

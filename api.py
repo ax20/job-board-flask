@@ -22,7 +22,6 @@ def get_jobs():
             search_type = request.args.get('searchType')
             query = request.args.get('q')
             jobs = []
-
             if search_type == 'type':
                 jobs = Job.query.filter(Job.type.ilike('%' + query + '%')).all()
             elif search_type == 'company':
@@ -34,6 +33,29 @@ def get_jobs():
         elif not request.args.get('searchType'):
             jobs = Job.query.filter(Job.title.ilike('%' + request.args.get('q') + '%')).all()
             return jsonify({'jobs': [job.serialize for job in jobs]})
+
+    elif request.args.get('sortBy'):
+        filter_by = request.args.get('sortBy')
+        if filter_by == 'expired':
+            jobs = Job.query.filter(status='expired').all()
+            return jsonify({'jobs': [job.serialize for job in jobs]})
+        elif filter_by == 'active':
+            jobs = Job.query.filter(status='active').all()
+            return jsonify({'jobs': [job.serialize for job in jobs]})
+        elif filter_by == 'salary-ascending':
+            jobs = Job.query.order_by(Job.salary).all()
+            return jsonify({'jobs': [job.serialize for job in jobs]})
+        elif filter_by == 'salary-descending':
+            jobs = Job.query.order_by(Job.salary.desc()).all()
+            return jsonify({'jobs': [job.serialize for job in jobs]})
+        elif filter_by == 'date-ascending':
+            jobs = Job.query.order_by(Job.date_posted).all()
+            return jsonify({'jobs': [job.serialize for job in jobs]})
+        elif filter_by == 'date-descending':
+            jobs = Job.query.order_by(Job.date_posted.desc()).all()
+            return jsonify({'jobs': [job.serialize for job in jobs]})
+        else:
+            return abort(jsonify({'error': 'Invalid filter provided'}), 400)
     else:
         jobs = Job.query.all()
         return jsonify({'jobs': [job.serialize for job in jobs]})
