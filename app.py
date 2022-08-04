@@ -29,15 +29,15 @@ create_tables()
 
 with open('site.json') as f:            
     config = json.load(f)
-    for em in config['administrators']:
-        email = EmailList(em)
-        print(email.email)
-        try:
-            db.session.add(email)
-            db.session.commit()
-        except Exception as e:
-            traceback.print_exc(file=sys.stdout)
-            sys.exit(1)
+    # for em in config['administrators']:
+    #     email = EmailList(em)
+    #     print(email.email)
+    #     try:
+    #         db.session.add(email)
+    #         db.session.commit()
+    #     except Exception as e:
+    #         traceback.print_exc(file=sys.stdout)
+    #         sys.exit(1)
 
     f.close()
     u = User(config['administrators'][0], bcrypt.generate_password_hash("password123").decode('utf-8'), True)
