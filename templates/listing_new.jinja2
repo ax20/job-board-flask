@@ -1,0 +1,61 @@
+{% extends 'layout.jinja2' %}
+{% block title %} New Listing {% endblock %}
+{% block styles %} {{ super() }} {% endblock %}
+{% block content %}
+<h1 class="ui header">Create New Listing</h1>
+<div class="ui divider"></div>
+<br>
+{% if current_user.is_administrator %}
+<form class="ui form" id="new_post" action="" method="POST">
+    <div class="field">
+        <label>URL</label>
+        <input type="text" name="url" placeholder="URL">
+    </div>
+    <div class="field">
+        <label>Title</label>
+        <input type="text" name="title" placeholder="Title">
+    </div>
+    <div class="field">
+        <label>Company</label>
+        <input type="text" name="company" placeholder="Company">
+    </div>
+    <div class="field">
+        <label>Position</label>
+        <input type="text" name="position" placeholder="Position">
+    </div>
+    <div class="inline fields">
+        <label for="type">Type:</label>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="type" tabindex="0" class="hidden">
+            <label>Remote</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="type" tabindex="0" class="hidden">
+            <label>Contract</label>
+          </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>Salary <i style="font-weight: normal;">(if the salary is left empty or set to 0, it is assumed to be volunteer work)</i></label>
+        <input type="text" name="salary" placeholder="Salary">
+      </div>
+    <div class="field">
+        <label>Title</label>
+        <input type="text" name="title" placeholder="Title">
+    </div>
+    <div class="field">
+        <label>Expiry Date</label>
+        <input type="date" name="date_expired" id="date_expired">
+    </div>
+    <div class="field">
+        <label>Content</label>
+        <textarea></textarea>
+    </div>
+        <button type="submit" class="positive ui button">Create New Listing</button>
+</form>
+<script defer src="/static/js/listing_new.js"></script>
+{% endif %}
+{% endblock %}

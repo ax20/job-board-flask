@@ -1,5 +1,5 @@
 {% extends 'layout.jinja2' %}
-{% block title %} Home {% endblock %}
+{% block title %} Dashboard {% endblock %}
 {% block styles %} {{ super() }}
 {% endblock %}
 {% block content %}
@@ -31,10 +31,9 @@
                 Create a new listing by click on the button below, you are also free to modify the post whenever needed after the fact. <i>You will be redirected to the job listing creation page.</i>
             </div>
             <div class="ui message"><b>NOTE</b>: Content is written in markdown for extra compability support.</div>
-            <a href="{{ url_for('home') }}">
+            <a href="{{ url_for('create_listing') }}">
                 <button class="positive ui button">Create New Listing</button>
             </a>
-            
         </div>
     </div>
     <div class="card">

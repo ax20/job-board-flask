@@ -4,7 +4,8 @@ from models import Job, User, Email
 from flask import request, jsonify, abort
 from util import logger
 from flask_login import login_required, current_user
-import json, requests
+import json
+from nanoid import generate
 
 API_ROUTE = '/zoro/v1'
 
@@ -37,10 +38,10 @@ def get_jobs():
     elif request.args.get('sortBy'):
         filter_by = request.args.get('sortBy')
         if filter_by == 'expired':
-            jobs = Job.query.filter(status='expired').all()
+            jobs = Job.query.filter(Job.status == "expired").all()
             return jsonify({'jobs': [job.serialize for job in jobs]})
         elif filter_by == 'active':
-            jobs = Job.query.filter(status='active').all()
+            jobs = Job.query.filter(Job.status == "status").all()
             return jsonify({'jobs': [job.serialize for job in jobs]})
         elif filter_by == 'salary-ascending':
             jobs = Job.query.order_by(Job.salary).all()
@@ -49,10 +50,10 @@ def get_jobs():
             jobs = Job.query.order_by(Job.salary.desc()).all()
             return jsonify({'jobs': [job.serialize for job in jobs]})
         elif filter_by == 'date-ascending':
-            jobs = Job.query.order_by(Job.date_posted).all()
+            jobs = Job.query.order_by(Job.date_published).all()
             return jsonify({'jobs': [job.serialize for job in jobs]})
         elif filter_by == 'date-descending':
-            jobs = Job.query.order_by(Job.date_posted.desc()).all()
+            jobs = Job.query.order_by(Job.date_published.desc()).all()
             return jsonify({'jobs': [job.serialize for job in jobs]})
         else:
             return abort(jsonify({'error': 'Invalid filter provided'}), 400)
@@ -139,6 +140,7 @@ def add_job():
             title=request.form.get('title'),
             content=request.form.get('content'),
             type=request.form.get('type'),
+            unique=str(generate('1234567890abcdef', 10)),
             status='active' if request.form.get('date_expired') == None or datetime.datetime.now() < datetime.datetime.strptime(request.form.get('date_expired'), '%Y-%m-%d') == None else 'expired',
             date_published=datetime.datetime.now().strftime('%Y-%m-%d'),
             date_updated=datetime.datetime.now().strftime('%Y-%m-%d'),

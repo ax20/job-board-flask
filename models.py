@@ -9,7 +9,7 @@ class Job(db.Model):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    unique = Column(String(10), unique=True, nullable=False, default=generate('1234567890abcdef', 10))
+    unique = Column(String(10), unique=True, nullable=False)
     title = Column(String(100), nullable=False)
     type = Column(String, nullable=False)
     status = Column(String, nullable=False)
@@ -23,8 +23,9 @@ class Job(db.Model):
     url = Column(String, nullable=False)
     content = Column(String, nullable=False)
 
-    def __init__(self, title, content, type, status, date_published, date_updated, date_expired, company, salary, location, position, url):
+    def __init__(self, unique,  title, content, type, status, date_published, date_updated, date_expired, company, salary, location, position, url):
         self.title = title
+        self.unique = unique
         self.content = content
         self.type = type
         self.status = status

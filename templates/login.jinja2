@@ -1,17 +1,30 @@
 {% extends 'layout.jinja2' %}
-{% block title %} Home {% endblock %}
+{% block title %} Login {% endblock %}
 {% block styles %} {{ super() }} {% endblock %}
 {% block content %}
+
 <h1 class="ui header">Login</h1>
 <div class="ui divider"></div>
 <br>
+{% if errors %}
+        <ul>
+            {% for e in errors %}
+              <div class="ui message">
+                <div class="header">{{e}}</div>
+                <p>
+                  {{errors[e]}}
+                </p>
+              </div>
+            {% endfor %}
+        </ul>
+{% endif %}
 <form class="ui {% if current_user.is_authenticated %}disabled{% endif %} form" method="POST" action="">
   {{ form.hidden_tag() }}
-  <div class="{% if current_user.is_authenticated %}disabled{% endif %} field">
+  <div class="{% if current_user.is_authenticated %}disabled{% endif %} {% if errors['email'] %}error{% endif %} field">
     <label for="email">Email</label>
     <input required type="email" name="email" placeholder="Email">
   </div>
-  <div class="{% if current_user.is_authenticated %}disabled{% endif %} field">
+  <div class="{% if current_user.is_authenticated %}disabled{% endif %} {% if errors['password'] %}error{% endif %} field">
     <label>Password</label>
     <input required type="password" name="password" placeholder="Password">
   </div>

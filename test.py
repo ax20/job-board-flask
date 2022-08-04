@@ -17,7 +17,7 @@ def add_jobs():
                 print('✔️ POST /zoro/v1/jobs/add/')
                 print(response.text)
             else:
-                print('❌ POST /zoro/v1/jobs/add/, returned ',response.status_code)
+                print('❌ POST /zoro/v1/jobs/add/, returned ', response.status_code)
                 print(response.text)
                 sys.exit(1)
         except:

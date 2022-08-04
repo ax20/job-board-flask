@@ -1,5 +1,5 @@
 {% extends 'layout.jinja2' %}
-{% block title %} Home {% endblock %}
+{% block title %} Register {% endblock %}
 {% block styles %} {{ super() }} {% endblock %}
 {% block content %}
 <h1 class="ui header">Register</h1>
@@ -33,7 +33,7 @@
 {% endif %}
 <form class="ui {% if current_user.is_authenticated %}disabled{% endif %} form" method="POST" action="">
   {{ form.hidden_tag() }}
-  <div class="field {% if errors['password'] %}error{% endif %}{% if current_user.is_authenticated %}disabled{% endif %}">
+  <div class="field {% if errors['email'] %}error{% endif %}{% if current_user.is_authenticated %}disabled{% endif %}">
     <label for="email">Email</label>
     <input required type="email" name="email" placeholder="Email">
   </div>
