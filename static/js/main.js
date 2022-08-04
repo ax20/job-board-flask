@@ -65,22 +65,21 @@ function getListings(query = undefined, sort = undefined) {
         console.log(results);
         let html = "";
         for (let i = 0; i < results.length; i++) {
+          // let summary = atob(results[i].content).substring(0, 100);
             html += `
-              <a href="/view/${results[i].unique}/">
               <div class="ui card">
               <div class="content">
-                <div class="header">${results[i].title}</div>
+              <a href="/view/${results[i].unique}/">
+               <div class="header">${results[i].title}</div>
                 <div class="meta">
                   <span>${results[i].date_published}</span>
-                  <a>$${results[i].salary}</a>
-                </div>
-                <div class="description">
-                  ${results[i].content}
+                  <p>${results[i].salary}</p>
                 </div>
                 <p></p>
+                </a>
               </div>
               </div>
-              </a>`;
+              `;
         }
         $("#results").hide();
         $("#filter").removeClass("disabled");

@@ -6,10 +6,12 @@ from models import Email as EmailList
 from api import *
 from os import remove, mkdir, path
 from sys import exit, stdout
+from datetime import datetime
 from flask_login import login_required, current_user, logout_user, login_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, EqualTo, Email
+import base64, markdown
 REGISTER_URL = '/register/'
 
 with open('site.json') as f:
@@ -64,23 +66,50 @@ def home():
         return render_template('home.jinja2', errors=request.args.get('errors'))
     return render_template('home.jinja2')
 
-@app.route('/view/<string:unique>/', methods=['GET', 'POST'])
+@app.route('/view/<string:unique>/', methods=['GET'])
 def view(unique):
     if request.method == 'GET':
         job = Job.query.filter_by(unique=unique).first()
         if job:
+            if job.date_expired:
+                # calculate days till expiry
+                now = datetime.now()
+                date_expired = datetime.strptime(job.date_expired, '%Y-%m-%d')
+                days_till_expiry = (date_expired - now).days
+                job.days_till_expiry = days_till_expiry
+            
+            try:
+                job.content = base64.b64decode(job.content).decode('utf-8')
+            except Exception as e:
+                traceback.print_exc(file=stdout)
+                job.content = "# Content could not be loaded, please contact an administrator along with the URL."
+
+            job.content = markdown.markdown(job.content)
             return render_template('listing.jinja2', job=job)
         else:
             return abort(404)
-    elif request.method == 'POST':
-        if current_user.is_administrator:
-            job = Job.query.filter_by(unique=unique).first()
-            if job:
-                return render_template('listing_edit.jinja2', job=job)
-            else:
-                return abort(404)
+
+@app.route('/edit/<string:unique>/', methods=['GET'])
+def edit(unique):
+    if request.method == 'GET':
+        job = Job.query.filter_by(unique=unique).first()
+        if job:
+            if job.date_expired:
+                # calculate days till expiry
+                now = datetime.now()
+                date_expired = datetime.strptime(job.date_expired, '%Y-%m-%d')
+                days_till_expiry = (date_expired - now).days
+                job.days_till_expiry = days_till_expiry
+            
+            try:
+                job.content = base64.b64decode(job.content).decode('utf-8').replace(" ", "&nbsp;")
+            except Exception as e:
+                traceback.print_exc(file=stdout)
+                job.content = "# Content could not be loaded, please contact an administrator along with the URL."
+
+            return render_template('listing_edit.jinja2', job=job)
         else:
-            return redirect("/view/{}".format(unique))
+            return abort(404)
     
 @app.route('/login/', methods=['GET', 'POST'])
 def login():

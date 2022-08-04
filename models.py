@@ -43,6 +43,7 @@ class Job(db.Model):
         return {
             'id': self.id,
             'unique': self.unique,
+            'content': self.content,
             'title': self.title,
             'type': self.type,
             'status': self.status,

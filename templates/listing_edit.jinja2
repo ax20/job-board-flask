@@ -1,16 +1,88 @@
 {% extends 'layout.jinja2' %}
-{% block title %} Editing {{ job.title }} {% endblock %}
+{% block title %} {{ job.title }} {% endblock %}
 {% block styles %} {{ super() }} {% endblock %}
 {% block content %}
 
 {% if current_user.is_authenticated %}
-<h1 style="display:inline-block;" class="ui header">{{ job.title }}</h1>
-{% if current_user.is_administrator %}
-<form style="display:none;" id="a" action="" method="POST"></form>
-<a href="#edit" onclick="document.getElementById('a').submit();" style="display:inline-block;vertical-align: middle;margin-bottom: 10px; margin-left: 10px;" class="ui button primary">Edit</a>
-{% endif %}
+<br>
+<div class="ui breadcrumb">
+    <a href="{{ url_for('home') }}" class="section">Jobs</a>
+    <i class="right angle icon divider"></i>
+    <div class="section">EDITING: {{ job.title }}</div>
+</div>
+<br><br>
+<form class="ui form" action="">
+    <h1 style="display:inline-block;" class="ui header">
+        <div class=" field">
+            <label for="title">Title</label>
+            <input value="{{ job.title }}" name="title" type="text">
+        </div>
+        </h1>
+        <div class=" field">
+            <label for="url">URL</label>
+            <input value="{{ job.url }}" name="url" type="text">
+        </div>
+        <br>
+        <div style="margin-top: 0px; margin-bottom: 5px;" class="ui horizontal large list">
+            <div class="item">
+                <div class="inline field">
+                    <i style="padding:0px; margin:0px;" class="building icon"></i>
+                    <label for="company">Company</label>
+                    <input value="{{ job.company }}" name="company" type="text">
+                </div>
+            </div>
+            <div class="item">
+                <div class="inline field">
+                    <i style="padding:0px; margin:0px;" class="briefcase icon"></i>
+                    <label for="position">Position</label>
+                    <input value="{{ job.position }}" name="position" type="text">
+                </div>
+            </div>
+            <div class="item">
+                <div class="inline field">
+                <i style="padding:0px; margin:0px;" class="location arrow icon"></i>
+                    <label for="type">Type</label>
+                    <input value="{{ job.type }}" name="type" type="text">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div style="margin-top: 0px; margin-bottom: 5px;" class="ui horizontal large list">
+            <div class="item">
+                <div class="inline field">
+                <i style="padding:0px; margin:0px;" class="map outline icon"></i>
+                <label for="location">Location</label>
+                <input value="{{ job.location }}" name="location" type="text">
+                </div>
+            </div>
 
-<div class="ui divider"></div>
+            <div class="item">
+                <div class="inline field">
+                <i style="padding:0px; margin:0px;" class="clock icon"></i>
+                <label for="date_expired">Date Expired</label>
+                <input value="{{ job.date_expired }}" name="date_expired" type="date">
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="inline field">
+                <i style="padding:0px; margin:0px;" class="clock icon"></i>
+                <label for="salary">Salary</label>
+                <input value="{{ job.salary }}" name="salary" type="text">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="ui divider"></div>
+        <div class="field">
+        <textarea name="content" rows="100">
+            {{ job.content }}
+        </textarea>
+        </div>
+        <div class="ui aligned container">
+            <button class="ui button primary" type="submit">Update Post</button>
+        </div>
+</form>
 <br>
 {% endif %}
 {% endblock %}

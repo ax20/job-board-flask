@@ -4,15 +4,76 @@
 {% block content %}
 
 {% if current_user.is_authenticated %}
-<h1 style="display:inline-block;" class="ui header">{{ job.title }}</h1>
+<br>
+<div class="ui breadcrumb">
+    <a href="{{ url_for('home') }}" class="section">Jobs</a>
+    <i class="right angle icon divider"></i>
+    <div class="section">{{ job.title }}</div>
+</div>
+<br>
+<h1 style="display:inline-block;" class="ui header">
+<a href="{{ job.url }}">
+    {{ job.title }} <i style="font-size: 1rem; vertical-align: top;" class="linkify icon"></i>
+</a>
+</h1>
+    
 {% if current_user.is_administrator %}
-<form style="display:none;" id="a" action="" method="POST"></form>
-<a href="#edit" onclick="document.getElementById('a').submit();"
+<form style="display:none;" id="edit" action="/edit/{{ job.unique }}/" method="GET"></form>
+<a href="#edit" onclick="document.getElementById('edit').submit();"
     style="display:inline-block;vertical-align: middle;margin-bottom: 10px; margin-left: 10px;"
     class="ui button primary">Edit</a>
+</span>
 {% endif %}
-
+<br>
+<div style="margin-top: 0px; margin-bottom: 5px;" class="ui horizontal large list">
+    <div class="item">
+        <i class="building icon"></i>
+        {{ job.company }}
+    </div>
+    <div class="item">
+        <i class="briefcase icon"></i>
+        {{ job.position }}
+    </div>
+    <div class="item">
+        <i class="location arrow icon"></i>
+        {{ job.type.title() }}
+    </div>
+</div>
+<br>
+<div style="margin-top: 0px; margin-bottom: 5px;" class="ui horizontal large list">
+    {% if job.type != "remote" %}
+    <a href="https://maps.google.com/?q={{ job.location }}" class="item">
+        <i class="map outline icon"></i>
+        {{ job.location }}
+    </a>
+    {% endif %}
+    
+    {% if job.days_till_expiry %}
+    <div class="item">
+        <i class="clock icon"></i>
+        Expires in {{ job.days_till_expiry }} days
+    </div>
+    {% else %}
+    <div class="item">
+        <i class="clock icon"></i>
+        {{ job.date_published }}
+    </div>
+    {% endif %}
+    <!-- salary -->
+    <div class="item">
+        <i class="dollar icon"></i>
+        {% if job.salary and job.salary != "0"  %}
+            {{ job.salary }}
+        {% else %}
+            Volunteer
+        {% endif %}
+    </div>
+</div>
+<br>
 <div class="ui divider"></div>
+<div class="content">
+    {{ job.content }}
+</div>
 <br>
 {% endif %}
 {% endblock %}

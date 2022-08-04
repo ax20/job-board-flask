@@ -10,5 +10,5 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data/database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 login_manager.init_app(app)
 bcrypt = Bcrypt(app)
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, session_options={"autoflush": False})
 BYPASS_TOKEN = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"
