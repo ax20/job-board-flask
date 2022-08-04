@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, request
 from models import User, create_tables
 from models import Email as EmailList
 from api import *
-import sys
+import sys, os
 from flask_login import login_required, current_user, logout_user, login_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -16,6 +16,7 @@ with open('site.json') as f:
 
 # create database file
 try:
+    os.mkdir('data')
     with open('data/database.db', 'x') as f:
         f.write('')
         f.close()
@@ -37,8 +38,9 @@ with open('site.json') as f:
         except Exception as e:
             traceback.print_exc(file=sys.stdout)
             sys.exit(1)
+
     f.close()
-    u = User(config['administrators'][0], bcrypt.generate_password_hash("ashwin123").decode('utf-8'), True)
+    u = User(config['administrators'][0], bcrypt.generate_password_hash("password123").decode('utf-8'), True)
     db.session.add(u)
     db.session.commit()
 class RegisterForm(FlaskForm):
