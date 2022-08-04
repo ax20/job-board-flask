@@ -95,7 +95,7 @@ def delete_job():
             db.session.delete(job)
             try:
                 db.session.commit()
-                return jsonify({'success': job.unique + ' deleted.'})
+                return jsonify({'success': {'unique':job.unique}})
             except:
                 logger(traceback.format_exc())
                 return jsonify({'error': 'Error deleting job'}), 500
@@ -112,18 +112,17 @@ def edit_job():
         if job:
             job.title = request.form.get('title')
             job.type =  request.form.get('type')
-            job.status = request.form.get('status')
-            job.date_published = request.form.get('date_published')
-            job.date_updated = request.form.get('date_updated')
             job.date_expired = request.form.get('date_expired') if request.form.get('date_expired') else None
             job.company = request.form.get('company')
-            job.salary = request.form.get('salary') if request.form.get('salary') else None
+            job.salary = request.form.get('salary') if request.form.get('salary') else "0"
             job.location = request.form.get('location')
             job.position = request.form.get('position')
             job.url = request.form.get('url')
+            job.content = request.form.get('content')
+            
             try:
                 db.session.commit()
-                return jsonify({'success': job.unique + ' edited.'})
+                return jsonify({'success': {'unique':job.unique}})
             except:
                 logger(traceback.format_exc())
                 return jsonify({'error': 'Error editing job'}), 500
@@ -154,7 +153,7 @@ def add_job():
         try:
             db.session.add(job)
             db.session.commit()
-            return jsonify({'success': job.unique + ' added.'})
+            return jsonify({'success': {'unique':job.unique}})
         except:
             logger(traceback.format_exc())
             return jsonify({'error': traceback.format_exc()}), 500

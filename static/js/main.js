@@ -68,16 +68,14 @@ function getListings(query = undefined, sort = undefined) {
           // let summary = atob(results[i].content).substring(0, 100);
             html += `
               <div class="ui card">
-              <div class="content">
-              <a href="/view/${results[i].unique}/">
+              <a class="content" href="/view/${results[i].unique}/">
                <div class="header">${results[i].title}</div>
                 <div class="meta">
                   <span>${results[i].date_published}</span>
-                  <p>${results[i].salary}</p>
+                  <p>${results[i].salary == 0 ? "Volunteer" : results[i].salary}</p>
                 </div>
                 <p></p>
                 </a>
-              </div>
               </div>
               `;
         }

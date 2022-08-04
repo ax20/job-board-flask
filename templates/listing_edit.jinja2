@@ -11,51 +11,61 @@
     <div class="section">EDITING: {{ job.title }}</div>
 </div>
 <br><br>
-<form class="ui form" action="">
+<form id="edit_post" class="ui form" action="">
     <h1 style="display:inline-block;" class="ui header">
         <div class=" field">
             <label for="title">Title</label>
-            <input value="{{ job.title }}" name="title" type="text">
+            <input required value="{{ job.title }}" name="title" type="text">
         </div>
         </h1>
-        <div class=" field">
+        <div class="field">
             <label for="url">URL</label>
-            <input value="{{ job.url }}" name="url" type="text">
+            <input required value="{{ job.url }}" name="url" type="text">
         </div>
         <br>
-        <div style="margin-top: 0px; margin-bottom: 5px;" class="ui horizontal large list">
+        <div style="margin-top: 0px; margin-bottom: 5px;" class="ui medium list">
             <div class="item">
                 <div class="inline field">
                     <i style="padding:0px; margin:0px;" class="building icon"></i>
                     <label for="company">Company</label>
-                    <input value="{{ job.company }}" name="company" type="text">
+                    <input required value="{{ job.company }}" name="company" type="text">
                 </div>
             </div>
             <div class="item">
                 <div class="inline field">
                     <i style="padding:0px; margin:0px;" class="briefcase icon"></i>
                     <label for="position">Position</label>
-                    <input value="{{ job.position }}" name="position" type="text">
+                    <input required value="{{ job.position }}" name="position" type="text">
                 </div>
             </div>
             <div class="item">
-                <div class="inline field">
-                <i style="padding:0px; margin:0px;" class="location arrow icon"></i>
-                    <label for="type">Type</label>
-                    <input value="{{ job.type }}" name="type" type="text">
+                <div class="inline fields">
+                    <i style="padding:0px; margin:0px;" class="location arrow icon"></i>
+                    <label for="type">Type:</label>
+                    <div class="field">
+                      <div name="types" required class="ui radio checkbox">
+                        <input value="remote" type="radio" id="remote" name="type" tabindex="0" class="hidden">
+                        <label>Remote</label>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <div class="ui radio checkbox">
+                        <input value="in-person" type="radio" id="in-person" name="type" tabindex="0" class="hidden">
+                        <label>In-Person</label>
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>
         <br>
-        <div style="margin-top: 0px; margin-bottom: 5px;" class="ui horizontal large list">
-            <div class="item">
+        <div style="margin-top: 0px; margin-bottom: 5px;" class="ui medium list">
+            <div id="location" class="item">
                 <div class="inline field">
                 <i style="padding:0px; margin:0px;" class="map outline icon"></i>
                 <label for="location">Location</label>
-                <input value="{{ job.location }}" name="location" type="text">
+                <input required value="{{ job.location }}" name="location" type="text">
                 </div>
             </div>
-
             <div class="item">
                 <div class="inline field">
                 <i style="padding:0px; margin:0px;" class="clock icon"></i>
@@ -63,12 +73,11 @@
                 <input value="{{ job.date_expired }}" name="date_expired" type="date">
                 </div>
             </div>
-
             <div class="item">
                 <div class="inline field">
                 <i style="padding:0px; margin:0px;" class="clock icon"></i>
                 <label for="salary">Salary</label>
-                <input value="{{ job.salary }}" name="salary" type="text">
+                <input required value="{{ job.salary }}" name="salary" type="text">
                 </div>
             </div>
         </div>
@@ -84,5 +93,69 @@
         </div>
 </form>
 <br>
+<script defer type="text/javascript">
+    $(document).ready(function() {
+
+        function utf8_to_b64( str ) {
+            return window.btoa(decodeURIComponent(encodeURIComponent(str)));
+        }
+
+        function b64EncodeUnicode(str) {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+            function toSolidBytes(match, p1) {
+                return String.fromCharCode('0x' + p1);
+        }));
+    }
+
+        if ('{{ job.type }}' == 'remote') {
+            $('#remote').prop('checked', true);
+        } else {
+            $('#in-person').prop('checked', true);
+        }
+
+        if ($('#remote').is(':checked')) {
+          $('#location').hide();
+          $('input[name="location"]').prop('required', false);
+        }
+
+        $('input[name="type"]').change(function() {
+        if ($('#remote').is(':checked')) {
+          $('#location').hide();
+          $('input[name="location"]').prop('required', false);
+        } else if ($('#in-person').is(':checked')) {
+          $('#location').show();
+          $('input[name="location"]').prop('required', true);
+        }
+      });
+      $("#edit_post").submit(function(e) {
+        e.preventDefault();
+        let c = $("#new_post textarea[name='content']").val();
+        $.ajax({
+          type: "POST",
+          url: "/zoro/v1/jobs/edit/",
+          data: {
+            unique: '{{ job.unique }}',
+            url: $("#edit_post input[name='url']").val(),
+            title: $("#edit_post input[name='title']").val(),
+            company: $("#edit_post input[name='company']").val(),
+            position: $("#edit_post input[name='position']").val(),
+            type: $("#edit_post input[name='type']:checked").val().toLowerCase(),
+            salary: $("#edit_post input[name='salary']").val(),
+            date_expired: $("#edit_post input[name='date_expired']").val(),
+            content: utf8_to_b64(c),
+            location: $("#edit_post input[name='location']").val()
+          },
+          success: function(data) {
+            window.location.href = "/view/" + data.success.unique;
+            
+          },
+          error: function(data) {
+            alert("Could not create listing");
+          }
+        })
+      });
+    });
+
+</script>
 {% endif %}
 {% endblock %}

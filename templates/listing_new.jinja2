@@ -9,42 +9,46 @@
 <form class="ui form" id="new_post" action="" method="POST">
     <div class="field">
         <label>URL</label>
-        <input type="text" name="url" placeholder="URL">
+        <input required type="text" name="url" placeholder="URL">
     </div>
     <div class="field">
         <label>Title</label>
-        <input type="text" name="title" placeholder="Title">
+        <input required type="text" name="title" placeholder="Title">
     </div>
     <div class="field">
         <label>Company</label>
-        <input type="text" name="company" placeholder="Company">
+        <input required type="text" name="company" placeholder="Company">
     </div>
     <div class="field">
         <label>Position</label>
-        <input type="text" name="position" placeholder="Position">
+        <input required type="text" name="position" placeholder="Position">
     </div>
     <div class="inline fields">
         <label for="type">Type:</label>
         <div class="field">
-          <div class="ui radio checkbox">
-            <input type="radio" name="type" tabindex="0" class="hidden">
+          <div name="types" required class="ui radio checkbox">
+            <input value="remote" type="radio" id="remote" name="type" tabindex="0" class="hidden">
             <label>Remote</label>
           </div>
         </div>
         <div class="field">
           <div class="ui radio checkbox">
-            <input type="radio" name="type" tabindex="0" class="hidden">
+            <input value="in-person" type="radio" id="in-person" name="type" tabindex="0" class="hidden">
             <label>In-Person</label>
           </div>
         </div>
     </div>
+    <div id="location" class="field">
+      <label>Location</label>
+      <input required type="text" name="location" placeholder="Location">
+  </div>
     <div class="field">
         <label>Salary <i style="font-weight: normal;">(if the salary is left empty or set to 0, it is assumed to be volunteer work)</i></label>
-        <input type="text" name="salary" placeholder="Salary">
+        <input required type="text" name="salary" placeholder="Salary">
       </div>
     <div class="field">
         <label>Title</label>
-        <input type="text" name="title" placeholder="Title">
+        <input required type="text" name="title" placeholder="Title">
     </div>
     <div class="field">
         <label>Expiry Date</label>
@@ -52,10 +56,64 @@
     </div>
     <div class="field">
         <label>Content <i style="font-weight: normal;">(you can edit markdown directly via <a target="_blank" referrerpolicy="noreffer" href="https://dillinger.io/">https://dillinger.io/</a> or use raw text)</i></label>
-        <textarea></textarea>
+        <textarea required name="content"></textarea>
     </div>
         <button type="submit" class="positive ui button">Create New Listing</button>
 </form>
-<script defer src="/static/js/listing_new.js"></script>
+<script defer type="text/javascript">
+    $(document).ready(function() {
+
+      function utf8_to_b64( str ) {
+            return window.btoa(decodeURIComponent(encodeURIComponent(str)));
+        }
+
+        function b64EncodeUnicode(str) {
+        // first we use encodeURIComponent to get percent-encoded UTF-8,
+        // then we convert the percent encodings into raw bytes which
+        // can be fed into btoa.
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+            function toSolidBytes(match, p1) {
+                return String.fromCharCode('0x' + p1);
+        }));
+    }
+
+      $('#date_expired').val(new Date().toISOString().substring(0, 10));
+
+        $('input[name="type"]').change(function() {
+        if ($('#remote').is(':checked')) {
+          $('#location').hide();
+          $('input[name="location"]').prop('required', false);
+        } else if ($('#in-person').is(':checked')) {
+          $('#location').show();
+          $('input[name="location"]').prop('required', true);
+        }
+      });
+      $("#new_post").submit(function(e) {
+        e.preventDefault();
+        $.ajax({
+          type: "POST",
+          url: "/zoro/v1/jobs/add/",
+          data: {
+            url: $("#new_post input[name='url']").val(),
+            title: $("#new_post input[name='title']").val(),
+            company: $("#new_post input[name='company']").val(),
+            position: $("#new_post input[name='position']").val(),
+            type: $("#new_post input[name='type']:checked").val().toLowerCase(),
+            salary: $("#new_post input[name='salary']").val(),
+            date_expired: $("#new_post input[name='date_expired']").val(),
+            content: utf8_to_b64($("#new_post textarea[name='content']").val()), // encode for db
+            location: $("#new_post input[name='location']").val()
+          },
+          success: function(data) {
+            window.location.href = "/view/" + data.unique;
+          },
+          error: function(data) {
+            alert("Could not create listing");
+          }
+        })
+      });
+    });
+
+</script>
 {% endif %}
 {% endblock %}
