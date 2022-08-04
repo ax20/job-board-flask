@@ -14,30 +14,28 @@ with open('site.json') as f:
     config = json.load(f)
     f.close()
 
-# h = True
-# while h:
-    with open('data/database.db', 'w') as f:
-        f.write('')
-        f.close()
+# create database file
+with open('data/database.db', 'x'):
+    pass
 
-    create_tables()
+# create tables
+create_tables()
 
-    with open('site.json') as f:            
-        config = json.load(f)
-        for em in config['administrators']:
-            email = EmailList(em)
-            print(email.email)
-            try:
-                db.session.add(email)
-                db.session.commit()
-            except Exception as e:
-                traceback.print_exc(file=sys.stdout)
-                sys.exit(1)
-        f.close()
-        u = User(config['administrators'][0], bcrypt.generate_password_hash("ashwin123").decode('utf-8'), True)
-        db.session.add(u)
-        db.session.commit()
-    h = False
+with open('site.json') as f:            
+    config = json.load(f)
+    for em in config['administrators']:
+        email = EmailList(em)
+        print(email.email)
+        try:
+            db.session.add(email)
+            db.session.commit()
+        except Exception as e:
+            traceback.print_exc(file=sys.stdout)
+            sys.exit(1)
+    f.close()
+    u = User(config['administrators'][0], bcrypt.generate_password_hash("ashwin123").decode('utf-8'), True)
+    db.session.add(u)
+    db.session.commit()
 class RegisterForm(FlaskForm):
     email = StringField(validators=[InputRequired(), Email()])
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)])
