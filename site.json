@@ -1,0 +1,14 @@
+{
+    "title": "",
+    "description": "",
+    "image": "",
+    "link": "",
+    "administrators": [
+        "ashwincharath@gmail.com"
+    ],
+    "messages": {
+        "no_content": "No content found",
+        "no_results": "No results found",
+        "no_access": "You do not have access to this content"
+    }
+}
