@@ -2,7 +2,7 @@
  A simple job board creating with Flask
 
 <p align=center>
-<img src="preview.png" width=500>
+<img src="preview.png" width=800>
 </p>
 
 ## Installation
