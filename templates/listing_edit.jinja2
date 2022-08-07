@@ -96,16 +96,13 @@
 <script defer type="text/javascript">
     $(document).ready(function() {
 
-        function utf8_to_b64( str ) {
-            return window.btoa(decodeURIComponent(encodeURIComponent(str)));
+      function toBinary(string) {
+        const codeUnits = new Uint16Array(string.length);
+        for (let i = 0; i < codeUnits.length; i++) {
+          codeUnits[i] = string.charCodeAt(i);
         }
-
-        function b64EncodeUnicode(str) {
-        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-            function toSolidBytes(match, p1) {
-                return String.fromCharCode('0x' + p1);
-        }));
-    }
+        return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
+      }
 
         if ('{{ job.type }}' == 'remote') {
             $('#remote').prop('checked', true);
@@ -129,7 +126,7 @@
       });
       $("#edit_post").submit(function(e) {
         e.preventDefault();
-        let c = $("#new_post textarea[name='content']").val();
+        let c = $("#edit_post textarea[name='content']").val();
         $.ajax({
           type: "POST",
           url: "/zoro/v1/jobs/edit/",
@@ -142,7 +139,7 @@
             type: $("#edit_post input[name='type']:checked").val().toLowerCase(),
             salary: $("#edit_post input[name='salary']").val(),
             date_expired: $("#edit_post input[name='date_expired']").val(),
-            content: utf8_to_b64(c),
+            content: toBinary(c),
             location: $("#edit_post input[name='location']").val()
           },
           success: function(data) {

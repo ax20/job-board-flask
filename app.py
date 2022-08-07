@@ -79,7 +79,7 @@ def view(unique):
                 job.days_till_expiry = days_till_expiry
             
             try:
-                job.content = base64.b64decode(job.content).decode('utf-8')
+                job.content = base64.b64decode(job.content).decode('utf-16')
             except Exception as e:
                 traceback.print_exc(file=stdout)
                 job.content = "# Content could not be loaded, please contact an administrator along with the URL."
@@ -102,7 +102,7 @@ def edit(unique):
                 job.days_till_expiry = days_till_expiry
             
             try:
-                job.content = base64.b64decode(job.content).decode('utf-8').replace(" ", "&nbsp;")
+                job.content = base64.b64decode(job.content).decode('utf-16').replace(" ", "&nbsp;")
             except Exception as e:
                 traceback.print_exc(file=stdout)
                 job.content = "# Content could not be loaded, please contact an administrator along with the URL."

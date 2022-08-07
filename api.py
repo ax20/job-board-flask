@@ -119,6 +119,7 @@ def edit_job():
             job.position = request.form.get('position')
             job.url = request.form.get('url')
             job.content = request.form.get('content')
+            print(job.content)
             
             try:
                 db.session.commit()

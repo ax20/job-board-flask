@@ -63,19 +63,14 @@
 <script defer type="text/javascript">
     $(document).ready(function() {
 
-      function utf8_to_b64( str ) {
-            return window.btoa(decodeURIComponent(encodeURIComponent(str)));
+      function toBinary(string) {
+        const codeUnits = new Uint16Array(string.length);
+        for (let i = 0; i < codeUnits.length; i++) {
+          codeUnits[i] = string.charCodeAt(i);
         }
+        return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
+      }
 
-        function b64EncodeUnicode(str) {
-        // first we use encodeURIComponent to get percent-encoded UTF-8,
-        // then we convert the percent encodings into raw bytes which
-        // can be fed into btoa.
-        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-            function toSolidBytes(match, p1) {
-                return String.fromCharCode('0x' + p1);
-        }));
-    }
 
       $('#date_expired').val(new Date().toISOString().substring(0, 10));
 
@@ -101,7 +96,7 @@
             type: $("#new_post input[name='type']:checked").val().toLowerCase(),
             salary: $("#new_post input[name='salary']").val(),
             date_expired: $("#new_post input[name='date_expired']").val(),
-            content: utf8_to_b64($("#new_post textarea[name='content']").val()), // encode for db
+            content: toBinary($("#new_post textarea[name='content']").val()), // encode for db
             location: $("#new_post input[name='location']").val()
           },
           success: function(data) {
