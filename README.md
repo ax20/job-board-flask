@@ -1,5 +1,5 @@
 # 💼 Job Board
- A job board with user, post, and email management with support for markdown content on each listing implemented in Python via [Flask](https://flask.palletsprojects.com/).
+ A job board with user, post, and email management with support for markdown content on each listing implemented in Python via [Flask](https://flask.palletsprojects.com/), [Jinja2](https://jinja.palletsprojects.com/) and [Sematic UI](https://semantic-ui.com/) for the looks.
 
 <p align=center>
 <img src="preview.png" width=800>
